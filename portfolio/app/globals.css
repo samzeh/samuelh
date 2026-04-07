@@ -75,3 +75,24 @@ h1, h2, h3, h4, h5, h6 {
     transform: none;
   }
 }
+
+.highlight-swipe {
+  clip-path: inset(0 100% 0 0);
+  opacity: 0;
+  animation: highlightSwipe 1s ease-out forwards;
+}
+
+@keyframes highlightSwipe {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  80% {
+    clip-path: inset(0 -5% 0 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 0% 0 0);
+    opacity: 1;
+  }
+}

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 
-const ImageFrame = (props: {
+export default function ImageFrame(props: {
   src: string;
   alt: string;
   size: string;
@@ -11,7 +11,7 @@ const ImageFrame = (props: {
   className?: string;
   /** Stagger entrance (e.g. "0.12s") */
   delay?: string;
-}) => {
+}) {
   const [playEntrance, setPlayEntrance] = useState(false)
 
   useEffect(() => {
@@ -76,5 +76,3 @@ const ImageFrame = (props: {
     </div>
   )
 }
-
-export default ImageFrame

@@ -1,14 +1,23 @@
 @import "tailwindcss";
 
+
 :root {
   --font-heading: var(--font-aleo);
   --font-body: var(--font-instrument-sans);
   --background: #ffffff;
   --foreground: #000000;
+  --color-text-main: #514433;
+  --color-text-detail: #817B73;
 }
 
 body {
   font-family: var(--font-body);
+  letter-spacing: -0.08em;
+  color: var(--color-text-main);
+}
+/* Utility class for detail text color */
+.text-detail {
+  color: var(--color-text-detail) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -28,4 +37,41 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-slow-ping {
   animation: slow-ping 2.5s cubic-bezier(0,0,0.2,1) infinite;
+}
+
+/* Pop: overshoot, brief hold, undershoot, settle — eased so it’s lively but not twitchy */
+@keyframes image-frame-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  48% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  72% {
+    transform: scale(0.94);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-image-frame-pop {
+  animation: image-frame-pop 1.18s cubic-bezier(0.28, 0.95, 0.38, 1) both;
+  transform-origin: center center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-image-frame-pop {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

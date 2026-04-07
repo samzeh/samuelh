@@ -8,7 +8,7 @@ const Status = () => {
           <span className="absolute w-3.5 h-3.5 bg-[#B6EEAA] rounded-full opacity-100 animate-slow-ping" />
           <div className="relative w-2.5 h-2.5 rounded-full bg-[#58C83F] opacity-100" />
         </div>
-        <div className="text-base font-sans text-[#71624D] font-normal tracking-[-0.08em]">
+        <div className="text-base font-sans text-[#71624D] font-normal">
           seeking fall 2026 internships
         </div>
       </div>

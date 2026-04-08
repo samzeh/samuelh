@@ -11,7 +11,7 @@ import ToolTip from './components/ToolTip';
 
 const Home = () => {
   const [hoverKey, setHoverKey] = useState<'name' | 'builder' | 'design' | null>(null)
-  const [imageHover, setImageHover] = useState<'lelamp' | 'socratica' | 'painting' | null>(null)
+  const [imageHover, setImageHover] = useState<'lelamp' | 'socratica' | 'painting' | 'name' | null>(null)
   const [nameFadeVersion, setNameFadeVersion] = useState(0)
 
   const handleNameHoverEnter = () => {
@@ -32,6 +32,7 @@ const Home = () => {
       lelamp: { lelamp: 30, socratica: 20, painting: 10 },
       socratica: { socratica: 30, lelamp: 20, painting: 10 },
       painting: { painting: 30, socratica: 20, lelamp: 10 },
+      name: {}
     }
 
     return map[imageHover][name]
@@ -39,11 +40,34 @@ const Home = () => {
   return (
     <main className="flex flex-col mt-15 mx-2">
       <div className="flex flex-row items-center gap-3 relative">
-        <div className={`transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>
-          <ImageFrame src="/me.png" alt="profile picture" size="70px" rotation="-7.1deg" />
+        
+        <div
+          className="relative"
+          onMouseEnter={() => setImageHover('name')}
+          onMouseLeave={() => setImageHover(null)}
+        >
+          {imageHover === 'name' && (
+            <div className="absolute -top-6.5 left-[50%] -translate-x-[50%] pointer-events-none justify-center w-full">
+              <div className="tooltip-pop">
+                <ToolTip tooltipText="me + bill nye" />
+              </div>
+            </div>
+          )}
+
+          <div
+            className="transition-transform duration-500 ease-out"
+            style={{
+              transform:
+                imageHover === 'name'
+                  ? 'scale(1.2) rotate(12deg)'
+                  : 'scale(1) rotate(0deg)',
+            }}
+          >
+            <ImageFrame src="/me.png" alt="profile picture" size="70px" rotation="-7.1deg" />
+          </div>
         </div>
 
-        <h1 className={`text-5xl mt-5 ml-1 transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>
+        <h1 className={`text-5xl mt-5 ml-0.5 transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>
           i&apos;m
         </h1>
 

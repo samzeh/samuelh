@@ -11,7 +11,7 @@ import ToolTip from './components/ToolTip';
 
 const Home = () => {
   const [hoverKey, setHoverKey] = useState<'name' | 'builder' | 'design' | null>(null)
-  const [imageHover, setImageHover] = useState<'lelamp' | 'socratica' | 'painting' | null>('socratica')
+  const [imageHover, setImageHover] = useState<'lelamp' | 'socratica' | 'painting' | null>(null)
   const [nameFadeVersion, setNameFadeVersion] = useState(0)
 
   const handleNameHoverEnter = () => {
@@ -154,55 +154,93 @@ const Home = () => {
           <span className={`${hoverKey ? 'opacity-20' : ''}`}>
             intersection of
           </span>
-
         <div className={`flex -space-x-4 ${hoverKey ? 'opacity-20' : ''}`}>
+          
           <div
-            className="relative transition-all duration-300 ease-out"
-            style={{
-              zIndex: getZ('lelamp'),
+            className="relative"
+            style={{ zIndex: getZ('lelamp') }}
+            onMouseEnter={() => setImageHover('lelamp')}
+            onMouseLeave={() => setImageHover(null)}
+          >
+            {imageHover === 'lelamp' && (
+              <div className="absolute -top-5.5 left-[50%] -translate-x-[65%] pointer-events-none justify-center w-full">
+                <div className="tooltip-pop">
+                  <ToolTip tooltipText="lelamp :)" />
+                </div>
+              </div>
+            )}
+            <div
+              className="transition-all duration-300 ease-out"
+              style={{
               transform:
                 imageHover === 'lelamp'
                   ? 'scale(1.1) rotate(12deg)'
                   : 'scale(1) rotate(0deg)',
-            }}
-            onMouseEnter={() => setImageHover('lelamp')}
-            onMouseLeave={() => setImageHover(null)}
-          >
-            <ImageFrame src="/lelamp.png" alt="lelamp" size="45px" rotation="-8.54deg" delay="0.08s"/>
+              }}
+            >
+              <ImageFrame src="/lelamp.png" alt="lelamp" size="45px" rotation="-8.54deg" delay="0.08s"/>
+            </div>
           </div>
 
           <div
-            className="relative transition-all duration-300 ease-out"
-            style={{ 
-              zIndex: getZ('socratica'),
-              transform:
-                imageHover === 'socratica'
-                  ? 'scale(1.1) rotate(-10.5deg)'
-                  : 'scale(1) rotate(0deg)', 
-            }}
+            className="relative"
+            style={{ zIndex: getZ('socratica') }}
             onMouseEnter={() => setImageHover('socratica')}
             onMouseLeave={() => setImageHover(null)}
           >
-            <ImageFrame src="/socratica.png" alt="socratica" size="45px" rotation="5.14deg" delay="0.16s"/>
+            {imageHover === 'socratica' && (
+              <div className="absolute -top-5.5 left-[50%] -translate-x-[65%] pointer-events-none justify-center w-full">
+                <div className="tooltip-pop">
+                  <ToolTip tooltipText="socratica!" />
+                </div>
+              </div>
+            )}
+            <div
+              className="transition-all duration-300 ease-out"
+              style={{
+                transform:
+                  imageHover === 'socratica'
+                    ? 'scale(1.1) rotate(-10.5deg)'
+                    : 'scale(1) rotate(0deg)',
+              }}
+            >
+              <ImageFrame
+                src="/socratica.png"
+                alt="socratica"
+                size="45px"
+                rotation="5.14deg"
+                delay="0.16s"
+              />
+            </div>
           </div>
 
           <div
-            className="relative transition-all duration-300 ease-out"
-            style={{
-              zIndex: getZ('painting'),
-              transform:
-                imageHover === 'painting'
-                  ? 'scale(1.1) rotate(10.39deg)'
-                  : 'scale(1) rotate(0deg)',
-            }}
+            className="relative"
+            style={{ zIndex: getZ('painting') }}
             onMouseEnter={() => setImageHover('painting')}
             onMouseLeave={() => setImageHover(null)}
           >
-            <ImageFrame src="/painting.png" alt="painting" size="45px" rotation="-1.39deg" delay="0.24s"/>
+            {imageHover === 'painting' && (
+              <div className="absolute -top-5.5 left-[50%] -translate-x-[65%] pointer-events-none justify-center w-full">
+                <div className="tooltip-pop">
+                  <ToolTip tooltipText="ex-painter" />
+                </div>
+              </div>
+            )}
+            <div
+              className="transition-all duration-300 ease-out"
+              style={{
+                transform:
+                  imageHover === 'painting'
+                    ? 'scale(1.1) rotate(10.39deg)'
+                    : 'scale(1) rotate(0deg)',
+              }}
+            >
+              <ImageFrame src="/painting.png" alt="painting" size="45px" rotation="-1.39deg" delay="0.24s"/>
+            </div>
           </div>
+        </div>
           
-          </div>
-
           <span
             className={`font-[550] text-[#1BAD0B] cursor-pointer transition-opacity duration-200 ${
               hoverKey && hoverKey !== 'design' ? 'opacity-20' : ''}`}

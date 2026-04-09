@@ -292,7 +292,7 @@ export function HomeInteractive() {
           </span>
         </div>
 
-        <hr className="border-t border-[#C0BDB9] w-45" />
+        <hr className="border-t border-[#C0BDB9] w-45 -mt-2.5" />
       </div>
     </>
   )

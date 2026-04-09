@@ -4,18 +4,23 @@ import React, { createContext, useContext, useMemo, useState, ReactNode } from "
 interface CursorContextType {
   hoverText: string | null;
   setCursorLabel: (label: string | null) => void;
+  cursorEnabled: boolean;
+  setCursorEnabled: (enabled: boolean) => void;
 }
 
 const CursorContext = createContext<CursorContextType | undefined>(undefined);
 
 export const CursorProvider = ({ children }: { children: ReactNode }) => {
   const [hoverText, setHoverText] = useState<string | null>(null);
+  const [cursorEnabled, setCursorEnabled] = useState(true);
   const value = useMemo(
     () => ({
       hoverText,
       setCursorLabel: setHoverText,
+      cursorEnabled,
+      setCursorEnabled,
     }),
-    [hoverText]
+    [hoverText, cursorEnabled]
   );
 
   return (

@@ -3,17 +3,21 @@ import React, { useEffect, useState } from "react";
 import { useCursorContext } from "./CursorContext";
 
 export default function Cursor() {
-  const { hoverText } = useCursorContext();
+  const { hoverText, cursorEnabled } = useCursorContext();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   const isPill = Boolean(hoverText);
 
   // Only render on client to avoid SSR hydration issues
   useEffect(() => {
-    setMounted(true);
+    document.body.style.cursor = cursorEnabled ? "none" : "auto";
+    return () => {
+      document.body.style.cursor = "auto";
+    };
+  }, [cursorEnabled]);
 
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
       setIsVisible(true);
@@ -32,7 +36,7 @@ export default function Cursor() {
     };
   }, []);
 
-  if (!mounted) return null; // Don't render on server
+  if (!cursorEnabled) return null;
 
   return (
     <div

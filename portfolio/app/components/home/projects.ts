@@ -25,7 +25,7 @@ export const projects: Project[] = [
     title: "Your next recipe, one scroll away",
     description: "dev",
     year: 2026,
-    vimeoId: "1181391862",
+    vimeoId: "1181428713",
     aspectRatio: "3/1.9",
     cursorText: "waitlist",
   },

@@ -4,6 +4,7 @@ import Status from "./components/Status";
 import "./globals.css";
 import Cursor from "./components/Cursor";
 import { CursorProvider } from "./components/CursorContext";
+import FooterContent from "./components/FooterContent";
 
 const aleo = Aleo({
   variable: "--font-aleo",
@@ -33,11 +34,11 @@ export default function RootLayout({
   <body>
     <CursorProvider>
       <Cursor />
-      <footer className="fixed bottom-0 left-0 right-0 z-0 h-120 bg-[#FFFCF9] flex items-center justify-center px-8">
-        <p>samuel huang · 2026</p>
+      <footer className="fixed bottom-0 left-0 right-0 z-0 h-120 bg-[#FFFCF9]">
+        <FooterContent />
       </footer>
-      <div className="relative z-10">
-        <div className="bg-white shadow-[0_0_23.4px_rgba(81,68,51,0.25)] flex flex-col p-8 min-h-screen">
+      <div className="relative z-10 pointer-events-none">
+        <div className="bg-white shadow-[0_0_23.4px_rgba(81,68,51,0.25)] flex flex-col p-8 min-h-screen pointer-events-auto">
           <header className="flex items-center justify-between pb-8">
           <Status />
           <nav className="flex gap-8 font-sans text-[#71624D] text-lg">

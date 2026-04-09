@@ -222,8 +222,9 @@ export default function ProjectTableOfContents() {
                   href={`#${item.id}`}
                   onClick={(event) => handleTocClick(event, item.id)}
                   aria-current={activeId === item.id ? "location" : undefined}
-                  className="group flex items-center gap-2 transition-colors cursor-none"
-                  style={{ color: activeId === item.id ? "#514433" : "#817B73" }}
+                  className={`group flex items-center gap-2 transition-colors cursor-none hover:text-[#514433] ${
+                    activeId === item.id ? "text-[#514433]" : "text-[#bdbbb9]"
+                  }`}
                 >
                   {item.text}
 

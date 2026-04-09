@@ -5,38 +5,39 @@ import { useCursorContext } from "./CursorContext";
 export default function Cursor() {
   const { hoverText, cursorEnabled } = useCursorContext();
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [currentText, setCurrentText] = useState<string | null>(null);
 
-  const isPill = Boolean(hoverText);
+  const isPill = Boolean(currentText);
 
-  // Only render on client to avoid SSR hydration issues
+  // Mount flag to prevent SSR mismatch
+  useEffect(() => setMounted(true), []);
+
+  // Hide native cursor
   useEffect(() => {
+    if (!mounted) return;
     document.body.style.cursor = cursorEnabled ? "none" : "auto";
-    return () => {
-      document.body.style.cursor = "auto";
-    };
-  }, [cursorEnabled]);
+    return () => { document.body.style.cursor = "auto"; };
+  }, [cursorEnabled, mounted]);
 
+  // Track mouse position continuously
   useEffect(() => {
+    if (!mounted) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
-      setIsVisible(true);
-    };
-
-    const handleMouseLeave = () => {
-      setIsVisible(false);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseout", handleMouseLeave);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mounted]);
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseout", handleMouseLeave);
-    };
-  }, []);
+  // Sync hoverText from context immediately
+  useEffect(() => {
+    setCurrentText(hoverText ?? null);
+  }, [hoverText]);
 
-  if (!cursorEnabled) return null;
+  if (!cursorEnabled || !mounted) return null;
 
   return (
     <div
@@ -46,7 +47,7 @@ export default function Cursor() {
         width: isPill ? "auto" : 28,
         height: isPill ? "auto" : 28,
         borderRadius: isPill ? 999 : "50%",
-        opacity: isVisible ? 1 : 0,
+        opacity: 1, // Always visible now
         transform: `translate(${position.x}px, ${position.y}px) translate(-50%, -50%)`,
         backgroundColor: isPill ? "#514433" : "transparent",
         padding: isPill ? "8px 16px" : "0",
@@ -58,7 +59,7 @@ export default function Cursor() {
     >
       {isPill ? (
         <span className="text-[#FFF4E7] text-body text-sm font-normal tracking-tight">
-          {hoverText}
+          {currentText}
         </span>
       ) : (
         <svg

@@ -43,10 +43,10 @@ export default function RootLayout({
           <header className="flex items-center justify-between pb-8">
           <Status />
           <nav className="flex gap-8 font-sans text-[#71624D] text-lg">
-            <Link href="/" className="cursor-none">home</Link>
-            <Link href="/about" className="cursor-none">about</Link>
-            <Link href="/play" className="cursor-none">play</Link>
-            <Link href="/resume" className="cursor-none">resume</Link>
+            <Link href="/" className="cursor-none hover:text-[#514433] transition-colors">home</Link>
+            <Link href="/about" className="cursor-none hover:text-[#514433] transition-colors">about</Link>
+            <Link href="/play" className="cursor-none hover:text-[#514433] transition-colors">play</Link>
+            <Link href="/resume" className="cursor-none hover:text-[#514433] transition-colors">resume</Link>
           </nav>
         </header>
         {children}

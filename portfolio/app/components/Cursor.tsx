@@ -1,17 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useCursorContext } from "./CursorContext";
 
+
 export default function Cursor() {
-  const { hoverText, cursorEnabled } = useCursorContext();
+  const { hoverText, cursorEnabled, setCursorLabel } = useCursorContext();
+  const pathname = usePathname();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [mounted, setMounted] = useState(false);
-  const [currentText, setCurrentText] = useState<string | null>(null);
 
-  const isPill = Boolean(currentText);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // Mount flag to prevent SSR mismatch
-  useEffect(() => setMounted(true), []);
+  const isPill = Boolean(hoverText);
 
   // Hide native cursor
   useEffect(() => {
@@ -34,10 +37,10 @@ export default function Cursor() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mounted]);
 
-  // Sync hoverText from context immediately
+  // Clear any stale pill label when navigating to a new route.
   useEffect(() => {
-    setCurrentText(hoverText ?? null);
-  }, [hoverText]);
+    setCursorLabel(null);
+  }, [pathname, setCursorLabel]);
 
   if (!cursorEnabled || !mounted) return null;
 
@@ -67,7 +70,7 @@ export default function Cursor() {
           }}
         >
           <span className="text-[#FFF4E7] text-body text-sm font-normal tracking-tight">
-            {currentText}
+            {hoverText}
           </span>
         </div>
       ) : (

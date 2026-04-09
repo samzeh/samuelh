@@ -5,6 +5,7 @@ import "./globals.css";
 import Cursor from "./components/Cursor";
 import { CursorProvider } from "./components/CursorContext";
 import FooterContent from "./components/FooterContent";
+import Link from "next/link";
 
 const aleo = Aleo({
   variable: "--font-aleo",
@@ -38,14 +39,14 @@ export default function RootLayout({
         <FooterContent />
       </footer>
       <div className="relative z-10 pointer-events-none">
-        <div className="bg-white shadow-[0_0_23.4px_rgba(81,68,51,0.25)] flex flex-col p-8 min-h-screen pointer-events-auto">
+        <div className="bg-white shadow-[0_0_23.4px_rgba(81,68,51,0.25)] flex flex-col p-10 min-h-screen pointer-events-auto">
           <header className="flex items-center justify-between pb-8">
           <Status />
           <nav className="flex gap-8 font-sans text-[#71624D] text-lg">
-            <div>home</div>
-            <div>about</div>
-            <div>play</div>
-            <div>resume</div>
+            <Link href="/" className="cursor-none">home</Link>
+            <Link href="/about" className="cursor-none">about</Link>
+            <Link href="/play" className="cursor-none">play</Link>
+            <Link href="/resume" className="cursor-none">resume</Link>
           </nav>
         </header>
         {children}

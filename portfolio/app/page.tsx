@@ -7,7 +7,7 @@ import { projects } from "./components/home/projects";
 
 export default function Home() {
   return (
-    <main className="flex flex-col mt-15 mx-4">
+    <main className="flex flex-col mt-15">
       <HomeInteractive />
 
       <div className="flex items-center gap-1.5 text-[18px] text-detail-color mt-1.5">

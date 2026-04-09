@@ -8,9 +8,19 @@ interface ProjectCardProps {
   project: Project;
 }
 
+
+import Link from "next/link";
+
+// Map project IDs to slugs for case studies
+const caseStudySlugs: Record<number, string> = {
+  1: "ripple",
+  3: "map",
+  4: "swift-er",
+};
+
 export default function ProjectCard({ project }: ProjectCardProps) {
   const { setCursorLabel } = useCursorContext();
-  const zoom = project.zoom || 1.2; 
+  const zoom = project.zoom || 1.2;
 
   const handleMouseEnter = () => {
     setCursorLabel(project.cursorText);
@@ -19,9 +29,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const handleMouseLeave = () => {
     setCursorLabel(null);
   };
-  return (
+
+  // Card content
+  const cardContent = (
     <div className="overflow-hidden flex flex-col">
-      
       {project.vimeoId ? (
         <div
           className="w-full relative overflow-hidden rounded-md border border-[#E7EEF3]"
@@ -69,4 +80,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       </div>
     </div>
   );
+
+  // If the project has a case study, link to the new slug-based route
+  if (caseStudySlugs[project.id]) {
+    return (
+      <Link
+        href={`/projects/${caseStudySlugs[project.id]}`}
+        style={{ textDecoration: "none", color: "inherit", cursor: "none" }}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+  return cardContent;
 }

@@ -14,10 +14,18 @@ body {
   font-family: var(--font-body);
   letter-spacing: -0.08em;
   color: var(--color-text-main);
+  cursor: none;
+  overflow-x: hidden;         /* prevent horizontal scrolling beyond edges */
+
 }
+
 /* Utility class for detail text color */
 .text-detail {
   color: var(--color-text-detail) !important;
+}
+
+.text-heading {
+  color: var(--color-text-heading) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -36,7 +44,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animate-slow-ping {
-  animation: slow-ping 2.5s cubic-bezier(0,0,0.2,1) infinite;
+  animation: slow-ping 1.5s cubic-bezier(0,0,0.2,1) infinite;
 }
 
 /* Pop: overshoot, brief hold, undershoot, settle — eased so it’s lively but not twitchy */

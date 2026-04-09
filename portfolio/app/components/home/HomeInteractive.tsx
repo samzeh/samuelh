@@ -109,7 +109,7 @@ export function HomeInteractive() {
         <span className={`transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>a</span>
 
         <span
-          className={`relative font-[550] text-[#0CAEFF] cursor-pointer transition-opacity duration-200 ${
+          className={`relative font-[550] text-[#0CAEFF] transition-opacity duration-200 ${
             hoverKey && hoverKey !== 'builder' ? 'opacity-20' : ''
           }`}
           onMouseEnter={() => setHoverKey('builder')}
@@ -246,7 +246,7 @@ export function HomeInteractive() {
           </div>
 
           <span
-            className={`relative inline-block font-[550] text-[#1BAD0B] cursor-pointer transition-opacity duration-200 ${
+            className={`relative inline-block font-[550] text-[#1BAD0B] transition-opacity duration-200 ${
               hoverKey && hoverKey !== 'design' ? 'opacity-20' : ''
             }`}
             onMouseEnter={() => setHoverKey('design')}

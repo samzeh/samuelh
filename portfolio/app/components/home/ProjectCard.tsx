@@ -1,25 +1,24 @@
+'use client';
 import React from "react";
 import Image from "next/image";
-import { Inter } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-
+import { useCursorContext } from "../CursorContext";
+import type { Project } from "./projects";
 
 interface ProjectCardProps {
-  project: {
-    id: number;
-    title: string;
-    description: string;
-    year: number;
-    image?: string;
-    vimeoId?: string;
-    aspectRatio?: string; // e.g., "3/2", "16/9"
-    zoom?: number;
-  };
+  project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const { setCursorLabel } = useCursorContext();
   const zoom = project.zoom || 1.2; 
+
+  const handleMouseEnter = () => {
+    setCursorLabel(project.cursorText);
+  };
+
+  const handleMouseLeave = () => {
+    setCursorLabel(null);
+  };
   return (
     <div className="overflow-hidden flex flex-col">
       
@@ -27,11 +26,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div
           className="w-full relative overflow-hidden rounded-md border border-[#E7EEF3]"
           style={{ aspectRatio: project.aspectRatio || "16/9" }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <iframe
             src={`https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&muted=1&loop=1&background=1`}
             title={project.title}
-            className="absolute top-1/2 left-1/2"
+            className="absolute top-1/2 left-1/2 pointer-events-none"
             style={{
               width: `${zoom * 100}%`,
               height: `${zoom * 100}%`,
@@ -46,6 +47,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div
           className="w-full relative rounded-md border border-[#E7EEF3] overflow-hidden"
           style={{ aspectRatio: project.aspectRatio || "3/2" }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <Image
             src={project.image!}
@@ -58,9 +61,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="flex justify-between box-border p-1 text-lg">
         <div>
-          <h2 className="text-main text-heading">{project.title}</h2>
+          <h2 className="text-main text-heading-color">{project.title}</h2>
         </div>
-        <span className="text-detail">
+        <span className="text-detail-color">
           {project.description}  <span className='text-l mx-1'>·</span>  {project.year}
         </span>
       </div>

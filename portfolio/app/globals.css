@@ -20,12 +20,20 @@ body {
 }
 
 /* Utility class for detail text color */
-.text-detail {
+.text-detail-color {
   color: var(--color-text-detail) !important;
 }
 
-.text-heading {
+.text-heading-color {
   color: var(--color-text-heading) !important;
+}
+
+.text-heading {
+  font-family: var(--font-heading);
+}
+
+.text-detail {
+  font-family: var(--font-body);
 }
 
 h1, h2, h3, h4, h5, h6 {

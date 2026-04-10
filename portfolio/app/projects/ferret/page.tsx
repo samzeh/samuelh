@@ -164,7 +164,7 @@ export default function RippleCaseStudy() {
       <section className="space-y-3">
         <h2 className="text-3xl">prototype</h2>
         <iframe
-          src="https://embed.figma.com/proto/V757mhTAKMzDvE88PTQyS8/Ferret?node-id=2-488&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=2%3A535&embed-host=share"
+          src="https://embed.figma.com/proto/V757mhTAKMzDvE88PTQyS8/Ferret?node-id=2-488&p=f&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=2%3A535&show-proto-sidebar=1&embed-host=share"
           className="w-full aspect-video border border-black/10 rounded"
           allowFullScreen
         />      

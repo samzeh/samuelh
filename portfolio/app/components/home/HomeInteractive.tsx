@@ -10,20 +10,60 @@ import { getImageStackZ, type ImageHoverKey } from './getImageStackZ'
 
 type HoverKey = 'name' | 'builder' | 'design' | null
 
+const mobileDefinitions: Record<'name' | 'builder' | 'design', { label: string; color: string; lines: string[] }> = {
+  name: {
+    label: '[1]',
+    color: '#F5900B',
+    lines: [
+      "as the title suggests, i'm samuel!",
+      "i'm currently studying systems design engineering @ uwaterloo hoping to focus on hci + tech.",
+    ],
+  },
+  builder: {
+    label: '[2]',
+    color: '#0CAEFF',
+    lines: ["i love building :) whether it be building tech or a new art piece, i'm all in."],
+  },
+  design: {
+    label: '[3]',
+    color: '#1BAD0B',
+    lines: [
+      'i hate boring tech.',
+      'currently exploring touch designer, media pipe, and open cv ;)',
+    ],
+  },
+}
+
 export function HomeInteractive() {
   const [hoverKey, setHoverKey] = useState<HoverKey>(null)
   const [imageHover, setImageHover] = useState<ImageHoverKey>(null)
   const [nameFadeVersion, setNameFadeVersion] = useState(0)
+  const [mobileExpanded, setMobileExpanded] = useState<HoverKey>(null)
 
   const handleNameHoverEnter = useCallback(() => {
     setHoverKey('name')
     setNameFadeVersion((prev) => prev + 1)
   }, [])
 
+  // Mobile tap handler — toggles single bottom expansion
+  const handleMobileTap = useCallback(
+    (key: 'name' | 'builder' | 'design') => {
+      const isTouch = window.matchMedia('(hover: none)').matches
+      if (!isTouch) return
+      const next = mobileExpanded === key ? null : key
+      setMobileExpanded(next)
+      setHoverKey(next)
+      if (next) setNameFadeVersion((prev) => prev + 1)
+    },
+    [mobileExpanded]
+  )
+
   const getZ = useCallback(
     (name: 'lelamp' | 'socratica' | 'painting') => getImageStackZ(imageHover, name),
     [imageHover]
   )
+
+  const activeDef = mobileExpanded ? mobileDefinitions[mobileExpanded] : null
 
   return (
     <>
@@ -64,6 +104,7 @@ export function HomeInteractive() {
           }`}
           onMouseEnter={handleNameHoverEnter}
           onMouseLeave={() => setHoverKey(null)}
+          onClick={() => handleMobileTap('name')}
         >
           <HighlightWrapper active={hoverKey === 'name'} src="/yellow-highlight.svg">
             <div className="block md:hidden">
@@ -82,8 +123,10 @@ export function HomeInteractive() {
           >
             [1]
           </span>
+
+          {/* Desktop-only floating definition */}
           {hoverKey === 'name' && (
-            <div className="absolute left-full top-25 -translate-y-full pointer-events-none flex items-start gap-2">
+            <div className="hidden md:flex absolute left-full top-25 -translate-y-full pointer-events-none items-start gap-2">
               <div className="flex-shrink-0 -mt-5">
                 <NameArrow animated className="rotate-[5deg] w-[min(500px,35vw)] h-auto" />
               </div>
@@ -102,7 +145,7 @@ export function HomeInteractive() {
                     as the title suggests, i&apos;m samuel! <br />
                   </span>
                   <span className="leading-4.5">
-                    i’m currently studying systems design engineering @ uwaterloo hoping to focus on hci + tech.
+                    i'm currently studying systems design engineering @ uwaterloo hoping to focus on hci + tech.
                   </span>
                 </div>
               </div>
@@ -110,6 +153,7 @@ export function HomeInteractive() {
           )}
         </div>
       </div>
+
       <div className="text-xl md:text-3xl flex gap-1">
         <span className={`transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>a</span>
 
@@ -119,13 +163,15 @@ export function HomeInteractive() {
           }`}
           onMouseEnter={() => setHoverKey('builder')}
           onMouseLeave={() => setHoverKey(null)}
+          onClick={() => handleMobileTap('builder')}
         >
           <HighlightWrapper className="[&>img]:translate-y-0" active={hoverKey === 'builder'} src="/blue-highlight.svg">
             builder
           </HighlightWrapper>
 
+          {/* Desktop-only floating definition */}
           {hoverKey === 'builder' && (
-            <div className="absolute left-full top-1 -translate-y-full pointer-events-none flex items-start gap-2 ml-10">
+            <div className="hidden md:flex absolute left-full top-1 -translate-y-full pointer-events-none items-start gap-2 ml-10">
               <div className="flex-shrink-0">
                 <BuildArrow animated className="w-[min(600px,40vw)] h-auto" />
               </div>
@@ -140,7 +186,7 @@ export function HomeInteractive() {
                     <span className="text-[#0CAEFF] text-2xl mt-17">[2] builder</span>
                   </div>
                   <span className="text-main leading-4.5 mt-1">
-                    i love building :) whether it be building tech or a new art piece, i’m all in.
+                    i love building :) whether it be building tech or a new art piece, i'm all in.
                   </span>
                 </div>
               </div>
@@ -257,13 +303,15 @@ export function HomeInteractive() {
             }`}
             onMouseEnter={() => setHoverKey('design')}
             onMouseLeave={() => setHoverKey(null)}
+            onClick={() => handleMobileTap('design')}
           >
             <HighlightWrapper className="text-xl md:text-3xl relative [&>img]:translate-y-0" active={hoverKey === 'design'} src="/green-highlight.svg">
               design + tech
             </HighlightWrapper>
 
+            {/* Desktop-only floating definition */}
             {hoverKey === 'design' && (
-              <div className="absolute left-full top-2 -translate-y-full pointer-events-none flex items-start gap-2 ml-9">
+              <div className="hidden md:flex absolute left-full top-2 -translate-y-full pointer-events-none items-start gap-2 ml-9">
                 <div className="flex-shrink-0 -mt-5">
                   <DesignArrow animated className="w-[min(300px,20vw)] h-auto" />
                 </div>
@@ -299,6 +347,30 @@ export function HomeInteractive() {
         </div>
 
         <hr className="border-t border-[#C0BDB9] w-28 md:w-45 -mt-2.5" />
+      </div>
+
+      {/* ── Mobile-only: single expansion zone, always below all intro text ── */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-400 ease-out ${
+          mobileExpanded ? 'max-h-48 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'
+        }`}
+        style={{ fontFamily: 'var(--font-heading)' }}
+      >
+        {activeDef && (
+          <div
+            key={`mobile-def-${mobileExpanded}-${nameFadeVersion}`}
+            className="name-text-fade-in flex flex-col items-start text-base pb-3"
+          >
+            <span className="font-medium mb-1" style={{ color: activeDef.color, fontSize: '1.1rem' }}>
+              {activeDef.label}
+            </span>
+            {activeDef.lines.map((line, i) => (
+              <span key={i} className="text-main leading-5 mt-1">
+                {line}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </>
   )

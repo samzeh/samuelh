@@ -15,8 +15,7 @@ body {
   letter-spacing: -0.08em;
   color: var(--color-text-main);
   cursor: none;
-  overflow-x: hidden;         /* prevent horizontal scrolling beyond edges */
-
+  overflow-x: hidden;      
 }
 
 /* Utility class for detail text color */

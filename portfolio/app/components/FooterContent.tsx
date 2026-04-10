@@ -1,20 +1,79 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import FooterTransformableImage from './FooterTransformableImage'
 
-const footerImages = [
-  { id: 'backpack', src: '/items/backpack.png', alt: 'backpack', initial: { left: 50, top: 30, width: 147, height: 225, rotation: -4 } },   // left
-  { id: 'airpod', src: '/items/airpod.png', alt: 'airpod', initial: { left: 300, top: 50, width: 150, height: 147, rotation: -4 } },       // middle-left
-  { id: 'cobra', src: '/items/cobra.png', alt: 'cobra', initial: { left: 750, top: 40, width: 147, height: 80, rotation: -4 } },           // right
-  { id: 'ipad', src: '/items/ipad.png', alt: 'ipad', initial: { left: 200, top: 150, width: 147, height: 215, rotation: -4 } },           // middle-left
-  { id: 'macbook', src: '/items/macbook.png', alt: 'macbook', initial: { left: 550, top: 100, width: 147, height: 120, rotation: -4 } },  // middle-right
-  { id: 'ti84', src: '/items/ti84.png', alt: 'ti84', initial: { left: 900, top: 180, width: 130, height: 245, rotation: -4 } },           // far-right
+type ImageConfig = {
+  id: string
+  src: string
+  alt: string
+  desktop: { left: number; top: number; width: number; height: number; rotation: number }
+  mobile: { left: number; top: number; width: number; height: number; rotation: number }
+}
+
+// Desktop positions are unchanged. Mobile positions are smaller and clustered
+// along the top strip so the bottom bar stays fully visible.
+const footerImages: ImageConfig[] = [
+  {
+    id: 'backpack',
+    src: '/items/backpack.png',
+    alt: 'backpack',
+    desktop: { left: 50,  top: 30,  width: 147, height: 225, rotation: -4 },
+    mobile:  { left: 4,   top: 8,   width: 60,  height: 92,  rotation: -6 },
+  },
+  {
+    id: 'airpod',
+    src: '/items/airpod.png',
+    alt: 'airpod',
+    desktop: { left: 300, top: 50,  width: 150, height: 147, rotation: -4 },
+    mobile:  { left: 72,  top: 12,  width: 62,  height: 61,  rotation:  4 },
+  },
+  {
+    id: 'cobra',
+    src: '/items/cobra.png',
+    alt: 'cobra',
+    desktop: { left: 750, top: 40,  width: 147, height: 80,  rotation: -4 },
+    mobile:  { left: 142, top: 18,  width: 72,  height: 39,  rotation: -3 },
+  },
+  {
+    id: 'ipad',
+    src: '/items/ipad.png',
+    alt: 'ipad',
+    desktop: { left: 200, top: 150, width: 147, height: 215, rotation: -4 },
+    mobile:  { left: 222, top: 6,   width: 52,  height: 76,  rotation:  5 },
+  },
+  {
+    id: 'macbook',
+    src: '/items/macbook.png',
+    alt: 'macbook',
+    desktop: { left: 550, top: 100, width: 147, height: 120, rotation: -4 },
+    mobile:  { left: 282, top: 14,  width: 68,  height: 56,  rotation: -5 },
+  },
+  {
+    id: 'ti84',
+    src: '/items/ti84.png',
+    alt: 'ti84',
+    desktop: { left: 900, top: 180, width: 130, height: 245, rotation: -4 },
+    mobile:  { left: 358, top: 4,   width: 38,  height: 72,  rotation:  3 },
+  },
 ]
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`)
+    setIsMobile(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [breakpoint])
+  return isMobile
+}
 
 export default function FooterContent() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [deselectSignal, setDeselectSignal] = useState(0)
+  const isMobile = useIsMobile()
 
   return (
     <div
@@ -30,21 +89,22 @@ export default function FooterContent() {
           containerRef={containerRef}
           src={item.src}
           alt={item.alt}
-          initial={item.initial}
+          initial={isMobile ? item.mobile : item.desktop}
           deselectSignal={deselectSignal}
+          disabled={isMobile}
         />
       ))}
 
-      <div className="pointer-events-auto absolute left-0 right-0 px-8 bottom-5 text-[#514433] flex justify-between items-center">
+      <div className="pointer-events-auto absolute left-0 right-0 px-4 md:px-8 bottom-5 text-[#514433] flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
+        
         <a
           href="mailto:samzehuang@gmail.com"
-          className="text-5xl hover:underline transition-all duration-200"
+          className="text-xl md:text-5xl hover:underline transition-all duration-200 leading-tight"
         >
           samzehuang [@] gmail [dot] com
         </a>
 
-        {/* Links */}
-        <div className="flex gap-7 text-xl mt-3 items-center text-heading">
+        <div className="flex gap-4 md:gap-7 text-sm md:text-xl items-center text-heading">
           <a href="mailto:samzehuang@gmail.com" className="hover:underline transition-all duration-200 text-heading">
             email
           </a>
@@ -54,7 +114,7 @@ export default function FooterContent() {
           <a href="https://github.com/samzeh" target="_blank" rel="noopener noreferrer" className="hover:underline transition-all duration-200">
             github
           </a>
-          <a href="/path-to-backpack" className="bg-[#2F2211] text-lg text-[#FFFCF9] px-3 py-1 rounded-full hover:opacity-80 transition-opacity duration-200">
+          <a href="/path-to-backpack" className="bg-[#2F2211] text-xs md:text-lg text-[#FFFCF9] px-3 py-1 rounded-full hover:opacity-80 transition-opacity duration-200">
             backpack
           </a>
         </div>

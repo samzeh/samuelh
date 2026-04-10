@@ -34,6 +34,7 @@ type FooterTransformableImageProps = {
   initial: Box
   minSize?: number
   deselectSignal?: number
+  disabled?: boolean
 }
 
 export default function FooterTransformableImage({
@@ -43,6 +44,7 @@ export default function FooterTransformableImage({
   initial,
   minSize = 72,
   deselectSignal = 0,
+  disabled = false,
 }: FooterTransformableImageProps) {
   const { setCursorEnabled } = useCursorContext()
   const [selected, setSelected] = useState(false)
@@ -71,6 +73,7 @@ export default function FooterTransformableImage({
   }
 
   const startMove = (e: React.PointerEvent) => {
+    if (disabled) return
     e.preventDefault()
     e.stopPropagation()
     setSelected(true)
@@ -84,6 +87,7 @@ export default function FooterTransformableImage({
   }
 
   const startResize = (handle: Handle) => (e: React.PointerEvent) => {
+    if (disabled) return
     e.preventDefault()
     e.stopPropagation()
     setSelected(true)
@@ -100,6 +104,7 @@ export default function FooterTransformableImage({
   }
 
   const startRotate = (e: React.PointerEvent) => {
+    if (disabled) return
     e.preventDefault()
     e.stopPropagation()
     setSelected(true)
@@ -112,7 +117,7 @@ export default function FooterTransformableImage({
   }
 
   useEffect(() => {
-    if (!interaction) return
+    if (!interaction || disabled) return
 
     const handlePointerMove = (e: PointerEvent) => {
       if (interaction.type === 'move') {
@@ -196,7 +201,7 @@ export default function FooterTransformableImage({
       window.removeEventListener('pointermove', handlePointerMove)
       window.removeEventListener('pointerup', handlePointerUp)
     }
-  }, [aspectRatio, containerRef, interaction, minSize, box])
+  }, [aspectRatio, containerRef, interaction, minSize, box, disabled])
 
   useEffect(() => {
     const el = containerRef.current
@@ -212,16 +217,18 @@ export default function FooterTransformableImage({
     setSelected(false)
   }, [deselectSignal])
 
+  // Keep box in sync when initial changes (e.g. switching desktop <-> mobile)
+  useEffect(() => {
+    setBox(initial)
+  }, [initial])
+
   const isResizing = interaction?.type === 'resize'
   const showSizeBadge = selected || isResizing
 
   return (
     <div
       ref={boxRef}
-      className="absolute touch-none select-none"
-      onPointerEnter={() => setCursorEnabled(false)}
-      onPointerLeave={() => setCursorEnabled(true)}
-      onPointerDown={startMove}
+      className="absolute select-none"
       style={{
         left: box.left,
         top: box.top,
@@ -229,9 +236,13 @@ export default function FooterTransformableImage({
         height: box.height,
         transform: `rotate(${box.rotation}deg)`,
         transformOrigin: 'center center',
-        touchAction: 'none',
+        touchAction: disabled ? 'auto' : 'none',
+        pointerEvents: disabled ? 'none' : 'auto',
         zIndex: selected ? 20 : 10,
       }}
+      onPointerEnter={disabled ? undefined : () => setCursorEnabled(false)}
+      onPointerLeave={disabled ? undefined : () => setCursorEnabled(true)}
+      onPointerDown={disabled ? undefined : startMove}
     >
       <img
         src={src}
@@ -240,7 +251,7 @@ export default function FooterTransformableImage({
         className="h-full w-full object-contain pointer-events-none"
       />
 
-      {selected && (
+      {selected && !disabled && (
         <>
           <div className="pointer-events-none absolute inset-0 border border-[#2196F3] rounded-[2px]" />
           <div className="absolute left-1/2 -top-7 h-5 w-px -translate-x-1/2 bg-[#2196F3]" />
@@ -251,26 +262,10 @@ export default function FooterTransformableImage({
             className="absolute left-1/2 -top-11 z-20 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#2196F3] bg-white cursor-grab"
           />
 
-          <button
-            aria-label={`Resize ${alt} top left`}
-            onPointerDown={startResize('nw')}
-            className="absolute -left-2 -top-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white"
-          />
-          <button
-            aria-label={`Resize ${alt} top right`}
-            onPointerDown={startResize('ne')}
-            className="absolute -right-2 -top-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white"
-          />
-          <button
-            aria-label={`Resize ${alt} bottom left`}
-            onPointerDown={startResize('sw')}
-            className="absolute -left-2 -bottom-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white"
-          />
-          <button
-            aria-label={`Resize ${alt} bottom right`}
-            onPointerDown={startResize('se')}
-            className="absolute -right-2 -bottom-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white"
-          />
+          <button aria-label={`Resize ${alt} top left`} onPointerDown={startResize('nw')} className="absolute -left-2 -top-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} top right`} onPointerDown={startResize('ne')} className="absolute -right-2 -top-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} bottom left`} onPointerDown={startResize('sw')} className="absolute -left-2 -bottom-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} bottom right`} onPointerDown={startResize('se')} className="absolute -right-2 -bottom-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
 
           {showSizeBadge && (
             <div className="absolute -bottom-12 left-1/2 z-20 -translate-x-1/2 rounded-md bg-[#2196F3] px-3 py-1 text-sm font-semibold text-white">

@@ -18,6 +18,12 @@ body {
   overflow-x: hidden;      
 }
 
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
 /* Utility class for detail text color */
 .text-detail-color {
   color: var(--color-text-detail) !important;

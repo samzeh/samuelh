@@ -47,7 +47,7 @@ export default function Cursor() {
   return (
     <div
       className="pointer-events-none fixed top-0 left-0 z-50 flex items-center justify-center
-                 transition-[width,height,border-radius,opacity,transform,background-color] duration-200 ease-out"
+                 transition-[width,height,border-radius,opacity,transform,background-color] duration-200 ease-out [@media(pointer:coarse)]:hidden"
       style={{
         width: isPill ? "auto" : 84,
         height: isPill ? "auto" : 65,

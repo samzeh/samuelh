@@ -27,7 +27,7 @@ export const projects: Project[] = [
     year: 2026,
     vimeoId: "1181428713",
     aspectRatio: "3/1.9",
-    cursorText: "waitlist",
+    cursorText: "join the munch",
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ export const projects: Project[] = [
     vimeoId: "1181399176",
     aspectRatio: "3/1.5",
     zoom: 1.3,
-    cursorText: "view case study",
+    cursorText: "view github",
   },
 
   {
@@ -57,7 +57,7 @@ export const projects: Project[] = [
     vimeoId: "1181401227",
     aspectRatio: "3/1.5",
     zoom: 1.3,
-    cursorText: "view project",
+    cursorText: "try it out",
   },
   {
     id: 6,
@@ -66,6 +66,6 @@ export const projects: Project[] = [
     year: 2023,
     image: "/ferret.png",
     aspectRatio: "3/1.5",
-    cursorText: "view project",
+    cursorText: "view case study",
   },
 ];

@@ -10,7 +10,7 @@ export default function Home() {
     <main className="flex flex-col mt-15">
       <HomeInteractive />
 
-      <div className="flex items-center gap-1.5 text-[18px] text-detail-color mt-1.5">
+      <div className="flex items-center gap-1.5 text-[15px] md:text-[18px] text-detail-color mt-1.5">
         <FaBriefcase />
         <span>curr. tpm</span>
         <Image src="/needlist.png" alt="needlist logo" width={20} height={20} className="rounded" />

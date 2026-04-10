@@ -39,7 +39,7 @@ export default function RootLayout({
         <FooterContent />
       </footer>
       <div className="relative z-10 pointer-events-none">
-        <div className="bg-white shadow-[0_0_23.4px_rgba(81,68,51,0.25)] flex flex-col p-10 min-h-screen pointer-events-auto">
+        <div className="p-4 bg-white shadow-[0_0_23.4px_rgba(81,68,51,0.25)] flex flex-col md:p-10 min-h-screen pointer-events-auto">
           <header className="flex items-center justify-between pb-8">
           <Status />
           <nav className="flex gap-8 font-sans text-[#71624D] text-lg">

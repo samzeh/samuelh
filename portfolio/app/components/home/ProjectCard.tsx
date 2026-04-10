@@ -11,11 +11,18 @@ interface ProjectCardProps {
 
 import Link from "next/link";
 
-// Map project IDs to slugs for case studies
-const caseStudySlugs: Record<number, string> = {
+// Map project IDs to slugs for case studies or external links
+const caseStudy: Record<number, string> = {
   1: "ripple",
   3: "map",
-  4: "swift-er",
+  6: "ferret"
+};
+
+// Map project IDs to external links (if any)
+const externalLinks: Record<number, string> = {
+  2: "https://jointhemunch.app/",
+  5: "https://bookarchives.vercel.app/",
+  4: "https://github.com/Hacky-Wacky-Team/swiftER"
 };
 
 export default function ProjectCard({ project }: ProjectCardProps) {
@@ -81,11 +88,24 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     </div>
   );
 
+  // If the project has an external link, use an anchor tag
+  if (externalLinks[project.id]) {
+    return (
+      <a
+        href={externalLinks[project.id]}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none", color: "inherit", cursor: "none" }}
+      >
+        {cardContent}
+      </a>
+    );
+  }
   // If the project has a case study, link to the new slug-based route
-  if (caseStudySlugs[project.id]) {
+  if (caseStudy[project.id]) {
     return (
       <Link
-        href={`/projects/${caseStudySlugs[project.id]}`}
+        href={`/projects/${caseStudy[project.id]}`}
         style={{ textDecoration: "none", color: "inherit", cursor: "none" }}
       >
         {cardContent}

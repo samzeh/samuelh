@@ -54,7 +54,7 @@ export function HomeInteractive() {
           </div>
         </div>
 
-        <h1 className={`text-5xl mt-5 ml-0.5 transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>
+        <h1 className={`text-4xl md:text-5xl mt-5 ml-0.5 transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>
           i&apos;m
         </h1>
 
@@ -66,11 +66,17 @@ export function HomeInteractive() {
           onMouseLeave={() => setHoverKey(null)}
         >
           <HighlightWrapper active={hoverKey === 'name'} src="/yellow-highlight.svg">
-            <AnimatedName animated={true} />
+            <div className="block md:hidden">
+              <AnimatedName animated={true} size={120} />
+            </div>
+
+            <div className="hidden md:block">
+              <AnimatedName animated={true} />
+            </div>
           </HighlightWrapper>
 
           <span
-            className={`text-lg text-[#F5900B] font-medium -mt-1.5 ${
+            className={`text-sm md:text-lg text-[#F5900B] font-medium -mt-1.5 ${
               hoverKey && hoverKey !== 'name' ? 'opacity-20' : ''
             }`}
           >
@@ -104,8 +110,7 @@ export function HomeInteractive() {
           )}
         </div>
       </div>
-
-      <div className="text-3xl flex gap-1">
+      <div className="text-xl md:text-3xl flex gap-1">
         <span className={`transition-opacity duration-200 ${hoverKey ? 'opacity-20' : ''}`}>a</span>
 
         <span
@@ -144,7 +149,7 @@ export function HomeInteractive() {
         </span>
 
         <span
-          className={`text-lg text-[#0CAEFF] font-medium -mt-1.5 ${
+          className={`text-sm md:text-lg text-[#0CAEFF] font-medium -mt-1.5 ${
             hoverKey && hoverKey !== 'builder' ? 'opacity-20' : ''
           }`}
         >
@@ -156,8 +161,8 @@ export function HomeInteractive() {
         </span>
       </div>
 
-      <div className="text-3xl flex flex-col gap-1">
-        <div className="flex gap-1 items-center">
+      <div className="text-xl md:text-3xl flex flex-col gap-1">
+        <div className="flex gap-1 items-center -mt-1.25 md:mt-0">
           <span className={`${hoverKey ? 'opacity-20' : ''}`}>intersection of</span>
           <div className={`flex -space-x-4 ${hoverKey ? 'opacity-20' : ''}`}>
             <div
@@ -182,7 +187,7 @@ export function HomeInteractive() {
                       : 'scale(1) rotate(0deg)',
                 }}
               >
-                <ImageFrame src="/lelamp.png" alt="lelamp" size="45px" rotation="-8.54deg" delay="0.08s" />
+                <ImageFrame src="/lelamp.png" alt="lelamp" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-8.54deg" delay="0.08s" />
               </div>
             </div>
 
@@ -211,7 +216,8 @@ export function HomeInteractive() {
                 <ImageFrame
                   src="/socratica.png"
                   alt="socratica"
-                  size="45px"
+                  size="40px"
+                  className="md:!w-[45px] md:!h-[45px]"
                   rotation="5.14deg"
                   delay="0.16s"
                 />
@@ -240,7 +246,7 @@ export function HomeInteractive() {
                       : 'scale(1) rotate(0deg)',
                 }}
               >
-                <ImageFrame src="/painting.png" alt="painting" size="45px" rotation="-1.39deg" delay="0.24s" />
+                <ImageFrame src="/painting.png" alt="painting" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-1.39deg" delay="0.24s" />
               </div>
             </div>
           </div>
@@ -252,7 +258,7 @@ export function HomeInteractive() {
             onMouseEnter={() => setHoverKey('design')}
             onMouseLeave={() => setHoverKey(null)}
           >
-            <HighlightWrapper className="relative [&>img]:translate-y-0" active={hoverKey === 'design'} src="/green-highlight.svg">
+            <HighlightWrapper className="text-xl md:text-3xl relative [&>img]:translate-y-0" active={hoverKey === 'design'} src="/green-highlight.svg">
               design + tech
             </HighlightWrapper>
 
@@ -284,7 +290,7 @@ export function HomeInteractive() {
           </span>
 
           <span
-            className={`text-lg text-[#1BAD0B] font-medium -mt-5 ${
+            className={`text-sm md:text-lg text-[#1BAD0B] font-medium -mt-5 ${
               hoverKey && hoverKey !== 'design' ? 'opacity-20' : ''
             }`}
           >
@@ -292,7 +298,7 @@ export function HomeInteractive() {
           </span>
         </div>
 
-        <hr className="border-t border-[#C0BDB9] w-45 -mt-2.5" />
+        <hr className="border-t border-[#C0BDB9] w-28 md:w-45 -mt-2.5" />
       </div>
     </>
   )

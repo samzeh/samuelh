@@ -30,7 +30,7 @@ export default function ImageTextSideBySide({
   imageHeight = 300,
   aspectRatio,
 }: ImageTextSideBySideProps) {
-  const imageCardWidth = Math.min(imageWidth, 240);
+  const imageCardWidth = imageWidth;
 
   return (
     <div

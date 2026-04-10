@@ -7,7 +7,7 @@ import ImageTextSideBySide from "../components/ImageTextSideBySide";
 export default function RippleCaseStudy() {
   return (
     <main className="space-y-10 md:px-4">
-      <h1 className="text-4xl">Reimagining the Future of LLMs</h1>
+      <h1 className="text-4xl mb-3">Reimagining the Future of LLMs</h1>
 
       <TitleImage
         src="/ripple.png"
@@ -133,6 +133,7 @@ export default function RippleCaseStudy() {
             { src: "/ripple/home2.png", alt: "home2" }]}
           imageLeft={true}
           aspectRatio="1/2"
+          imageWidth={240}
         >
           <h3 className="text-2xl mt-2">home page</h3>
           <p className="text-detail-color">On the home page, users are greeted by a familiar 
@@ -152,6 +153,7 @@ export default function RippleCaseStudy() {
           images={[{ src: "/ripple/result.png", alt: "answer" }]}
           imageLeft={false}
           aspectRatio="1/2"
+          imageWidth={240}
         >
           <h3 className="text-2xl mt-2">answer page</h3>
           <p className="text-detail-color">Once a user selects the answer they want to view, they 
@@ -171,6 +173,7 @@ export default function RippleCaseStudy() {
           images={[{ src: "/ripple/discover.png", alt: "discover" }]}
           aspectRatio="1/2"
           imageLeft={true}
+          imageWidth={240}
         >
           <h3 className="text-2xl mt-2">discover page</h3>
           <p className="text-detail-color">Ripple also features a discover page (inspired by Ditto Lists) 
@@ -192,6 +195,7 @@ export default function RippleCaseStudy() {
           ]}
           aspectRatio="1/2"
           imageLeft={false}
+          imageWidth={240}
         >
           <h3 className="text-2xl mt-2">profile page</h3>
           <p className="text-detail-color">Finally, on the profile page, you are able to view 
@@ -232,7 +236,7 @@ export default function RippleCaseStudy() {
 
       </section>
       <section className="space-y-3">
-        <h2 className="text-3xl">Reflection</h2>
+        <h2 className="text-3xl">reflections</h2>
         <p className="text-detail-color">
           🥉 We placed third at Bloom Designathon!
         </p>

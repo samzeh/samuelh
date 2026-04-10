@@ -1,33 +1,46 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import { useCursorContext } from "./CursorContext";
 
+function subscribeFinePointerHover(onChange: () => void) {
+  const mql = window.matchMedia("(hover: hover) and (pointer: fine)");
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+
+function getFinePointerHoverSnapshot() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function getFinePointerHoverServerSnapshot() {
+  return false;
+}
 
 export default function Cursor() {
   const { hoverText, cursorEnabled, setCursorLabel } = useCursorContext();
   const pathname = usePathname();
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const finePointerHover = useSyncExternalStore(
+    subscribeFinePointerHover,
+    getFinePointerHoverSnapshot,
+    getFinePointerHoverServerSnapshot
+  );
 
   const isPill = Boolean(hoverText);
+  const active = finePointerHover && cursorEnabled;
 
-  // Hide native cursor
+  // Hide native cursor only when the custom cursor is actually in use
   useEffect(() => {
-    if (!mounted) return;
-    document.body.style.cursor = cursorEnabled ? "none" : "auto";
+    document.body.style.cursor = active ? "none" : "auto";
     return () => {
       document.body.style.cursor = "auto";
     };
-  }, [cursorEnabled, mounted]);
+  }, [active]);
 
   // Track mouse position continuously
   useEffect(() => {
-    if (!mounted) return;
+    if (!finePointerHover) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
@@ -35,19 +48,19 @@ export default function Cursor() {
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mounted]);
+  }, [finePointerHover]);
 
   // Clear any stale pill label when navigating to a new route.
   useEffect(() => {
     setCursorLabel(null);
   }, [pathname, setCursorLabel]);
 
-  if (!cursorEnabled || !mounted) return null;
+  if (!active) return null;
 
   return (
     <div
       className="pointer-events-none fixed top-0 left-0 z-50 flex items-center justify-center
-                 transition-[width,height,border-radius,opacity,transform,background-color] duration-200 ease-out [@media(pointer:coarse)]:hidden"
+                 transition-[width,height,border-radius,opacity,transform,background-color] duration-200 ease-out"
       style={{
         width: isPill ? "auto" : 84,
         height: isPill ? "auto" : 65,

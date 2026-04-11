@@ -65,8 +65,21 @@ export function HomeInteractive() {
 
   const activeDef = mobileExpanded ? mobileDefinitions[mobileExpanded] : null
 
+  const closeMobileExpanded = useCallback(() => {
+    setMobileExpanded(null)
+    setHoverKey(null)
+  }, [])
+
   return (
-    <>
+    <div className="relative">
+      {/* Invisible full-screen backdrop — closes expansion on any outside tap */}
+      {mobileExpanded && (
+        <div
+          className="md:hidden fixed inset-0 z-10"
+          onClick={closeMobileExpanded}
+        />
+      )}
+      <div className="relative z-20" onClick={closeMobileExpanded}>
       <div className="flex flex-row items-center gap-3 relative">
         <div
           className="relative"
@@ -82,7 +95,7 @@ export function HomeInteractive() {
           )}
 
           <div
-            className="transition-transform duration-500 ease-out"
+            className={`transition-transform duration-500 ease-out ${hoverKey ? 'opacity-20' : ''}`}
             style={{
               transform:
                 imageHover === 'name'
@@ -104,7 +117,7 @@ export function HomeInteractive() {
           }`}
           onMouseEnter={handleNameHoverEnter}
           onMouseLeave={() => setHoverKey(null)}
-          onClick={() => handleMobileTap('name')}
+          onClick={(e) => { e.stopPropagation(); handleMobileTap('name') }}
         >
           <HighlightWrapper active={hoverKey === 'name'} src="/yellow-highlight.svg">
             <div className="block md:hidden">
@@ -163,7 +176,7 @@ export function HomeInteractive() {
           }`}
           onMouseEnter={() => setHoverKey('builder')}
           onMouseLeave={() => setHoverKey(null)}
-          onClick={() => handleMobileTap('builder')}
+          onClick={(e) => { e.stopPropagation(); handleMobileTap('builder') }}
         >
           <HighlightWrapper className="[&>img]:translate-y-0" active={hoverKey === 'builder'} src="/blue-highlight.svg">
             builder
@@ -303,7 +316,7 @@ export function HomeInteractive() {
             }`}
             onMouseEnter={() => setHoverKey('design')}
             onMouseLeave={() => setHoverKey(null)}
-            onClick={() => handleMobileTap('design')}
+            onClick={(e) => { e.stopPropagation(); handleMobileTap('design') }}
           >
             <HighlightWrapper className="text-xl md:text-3xl relative [&>img]:translate-y-0" active={hoverKey === 'design'} src="/green-highlight.svg">
               design + tech
@@ -359,9 +372,9 @@ export function HomeInteractive() {
         {activeDef && (
           <div
             key={`mobile-def-${mobileExpanded}-${nameFadeVersion}`}
-            className="name-text-fade-in flex flex-col items-start text-base pb-3"
+            className="flex flex-col items-start text-base pb-3"
           >
-            <span className="font-medium mb-1" style={{ color: activeDef.color, fontSize: '1.1rem' }}>
+            <span className="font-medium mb-1" style={{ color: activeDef.color, fontSize: '1.25rem' }}>
               {activeDef.label}
             </span>
             {activeDef.lines.map((line, i) => (
@@ -372,6 +385,7 @@ export function HomeInteractive() {
           </div>
         )}
       </div>
-    </>
+      </div> {/* z-20 content wrapper */}
+    </div>
   )
 }

@@ -50,10 +50,10 @@ export default function About() {
           <Polaroid
             src="/aboutme.png"
             alt="me"
-            width={280}
             date="20/08/2024"
             description="canoe trip!   🛶  ☀️"
             rotation={2.15}
+            className="w-[230px] md:w-[280px]"
           />
         </div>
       </div>

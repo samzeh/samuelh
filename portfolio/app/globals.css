@@ -24,6 +24,14 @@ body {
   }
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE / Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome / Safari */
+}
 /* Utility class for detail text color */
 .text-detail-color {
   color: var(--color-text-detail) !important;
@@ -178,5 +186,36 @@ h1, h2, h3, h4, h5, h6 {
 @media (prefers-reduced-motion: reduce) {
   .page-transition-enter {
     animation: none;
+  }
+}
+
+/* Custom cursor: UA sets pointer on <a>/<button>; that overrides inherited body cursor.
+   Toggled on <html> in Cursor.tsx (useLayoutEffect). Must stay after Tailwind imports. */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+
+/* Custom cursor: pill expands from the arrow hotspot */
+@keyframes cursor-pill-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.68);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cursor-pill-enter {
+  animation: cursor-pill-enter 0.32s cubic-bezier(0.22, 1.45, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-pill-enter {
+    animation: none;
+    opacity: 1;
+    transform: scale(1);
   }
 }

@@ -1,59 +1,49 @@
-/** Public Substack archive JSON — same surface the Python substack-api client uses. */
-
 export const SUBSTACK_PUBLICATION_URL = "https://samandthoughts.substack.com";
 
-export type SubstackArchivePost = {
+export type SubstackPost = {
   id: number;
   title: string;
   subtitle: string | null;
-  description: string | null;
-  canonical_url: string;
+  url: string;
   cover_image: string | null;
-  post_date: string;
-  slug: string;
 };
 
-function normalizePost(raw: Record<string, unknown>): SubstackArchivePost | null {
-  const id = raw.id;
-  const slug = raw.slug;
-  if (typeof id !== "number" || typeof slug !== "string") return null;
+function normalizePost(raw: Record<string, unknown>): SubstackPost | null {
+  if (typeof raw.id !== "number" || typeof raw.slug !== "string") {
+    return null;
+  }
 
-  const canonical =
+  const url =
     typeof raw.canonical_url === "string"
       ? raw.canonical_url
-      : `${SUBSTACK_PUBLICATION_URL}/p/${slug}`;
+      : `${SUBSTACK_PUBLICATION_URL}/p/${raw.slug}`;
 
   return {
-    id,
+    id: raw.id,
     title: typeof raw.title === "string" ? raw.title : "",
     subtitle: typeof raw.subtitle === "string" ? raw.subtitle : null,
-    description: typeof raw.description === "string" ? raw.description : null,
-    canonical_url: canonical,
+    url,
     cover_image: typeof raw.cover_image === "string" ? raw.cover_image : null,
-    post_date: typeof raw.post_date === "string" ? raw.post_date : "",
-    slug,
   };
 }
 
 export async function fetchSubstackArchive(
-  limit = 10
-): Promise<SubstackArchivePost[]> {
-  const url = `${SUBSTACK_PUBLICATION_URL}/api/v1/archive?limit=${limit}`;
-  const res = await fetch(url, {
-    next: { revalidate: 300 },
-    headers: { Accept: "application/json" },
-  });
+  limit = 5
+): Promise<SubstackPost[]> {
+  const res = await fetch(
+    `${SUBSTACK_PUBLICATION_URL}/api/v1/archive?limit=${limit}`
+  );
+
   if (!res.ok) return [];
 
   const data: unknown = await res.json();
   if (!Array.isArray(data)) return [];
 
-  const posts: SubstackArchivePost[] = [];
-  for (const item of data) {
-    if (item && typeof item === "object") {
-      const normalized = normalizePost(item as Record<string, unknown>);
-      if (normalized) posts.push(normalized);
-    }
-  }
-  return posts;
+  return data
+    .map((item) =>
+      item && typeof item === "object"
+        ? normalizePost(item as Record<string, unknown>)
+        : null
+    )
+    .filter((post): post is SubstackPost => post !== null);
 }

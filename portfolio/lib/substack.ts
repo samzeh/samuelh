@@ -31,7 +31,10 @@ export async function fetchSubstackArchive(
   limit = 5
 ): Promise<SubstackPost[]> {
   const res = await fetch(
-    `${SUBSTACK_PUBLICATION_URL}/api/v1/archive?limit=${limit}`
+    `${SUBSTACK_PUBLICATION_URL}/api/v1/archive?limit=${limit}`,
+    {
+      next: { revalidate: 60 * 60 * 24 * 7 }, // 1 week
+    }
   );
 
   if (!res.ok) return [];

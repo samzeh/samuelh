@@ -219,3 +219,23 @@ html.custom-cursor * {
     transform: scale(1);
   }
 }
+
+
+
+.topo-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  background-color: #f7f6f2;
+
+  /* layered contour lines */
+  background-image:
+    radial-gradient(circle at 20% 30%, transparent 0px, transparent 60px, rgba(0,0,0,0.06) 61px, transparent 62px),
+    radial-gradient(circle at 70% 60%, transparent 0px, transparent 80px, rgba(0,0,0,0.05) 81px, transparent 82px),
+    radial-gradient(circle at 40% 80%, transparent 0px, transparent 100px, rgba(0,0,0,0.04) 101px, transparent 102px),
+    radial-gradient(circle at 80% 20%, transparent 0px, transparent 70px, rgba(0,0,0,0.05) 71px, transparent 72px);
+
+  background-size: 300px 300px, 400px 400px, 500px 500px, 350px 350px;
+  background-repeat: repeat;
+}

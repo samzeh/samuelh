@@ -254,22 +254,25 @@ export default function FooterTransformableImage({
       {selected && !disabled && (
         <>
           <div className="pointer-events-none absolute inset-0 border border-[#2196F3] rounded-[2px]" />
-          <div className="absolute left-1/2 -top-7 h-5 w-px -translate-x-1/2 bg-[#2196F3]" />
+          {/* Rotation: stack sits above the box; bottom of the stem meets the top border (no gap). */}
+          <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 -translate-y-full flex-col items-center">
+            <button
+              aria-label={`Rotate ${alt}`}
+              onPointerDown={startRotate}
+              type="button"
+              className="h-4 w-4 shrink-0 rounded-full border border-[#2196F3] bg-white cursor-grab"
+            />
+            <div className="h-2.5 w-px shrink-0 bg-[#2196F3]" aria-hidden />
+          </div>
 
-          <button
-            aria-label={`Rotate ${alt}`}
-            onPointerDown={startRotate}
-            className="absolute left-1/2 -top-11 z-20 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#2196F3] bg-white cursor-grab"
-          />
-
-          <button aria-label={`Resize ${alt} top left`} onPointerDown={startResize('nw')} className="absolute -left-2 -top-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
-          <button aria-label={`Resize ${alt} top right`} onPointerDown={startResize('ne')} className="absolute -right-2 -top-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
-          <button aria-label={`Resize ${alt} bottom left`} onPointerDown={startResize('sw')} className="absolute -left-2 -bottom-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
-          <button aria-label={`Resize ${alt} bottom right`} onPointerDown={startResize('se')} className="absolute -right-2 -bottom-2 z-20 h-4 w-4 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} top left`} onPointerDown={startResize('nw')} className="absolute -left-1.5 -top-1.5 z-20 h-3 w-3 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} top right`} onPointerDown={startResize('ne')} className="absolute -right-1.5 -top-1.5 z-20 h-3 w-3 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} bottom left`} onPointerDown={startResize('sw')} className="absolute -bottom-1.5 -left-1.5 z-20 h-3 w-3 border-2 border-[#2196F3] bg-white" />
+          <button aria-label={`Resize ${alt} bottom right`} onPointerDown={startResize('se')} className="absolute -bottom-1.5 -right-1.5 z-20 h-3 w-3 border-2 border-[#2196F3] bg-white" />
 
           {showSizeBadge && (
-            <div className="absolute -bottom-12 left-1/2 z-20 -translate-x-1/2 rounded-md bg-[#2196F3] px-3 py-1 text-sm font-semibold text-white">
-              {Math.round(box.width)} x {Math.round(box.height)}
+            <div className="absolute -bottom-12 left-1/2 z-20 max-w-none -translate-x-1/2 whitespace-nowrap rounded-md bg-[#2196F3] px-3 py-1 text-sm font-semibold leading-none text-white tabular-nums">
+              {Math.round(box.width)} × {Math.round(box.height)}
             </div>
           )}
         </>

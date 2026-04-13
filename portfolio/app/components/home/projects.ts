@@ -54,7 +54,7 @@ export const projects: Project[] = [
     title: "Visualizing book recommendations",
     description: "dev",
     year: 2026,
-    vimeoId: "1182442907",
+    vimeoId: "1182781802",
     aspectRatio: "3/1.5",
     zoom: 1.3,
     cursorText: "try it out",

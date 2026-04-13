@@ -6,7 +6,9 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useSyncExternalStore,
   type MouseEvent as ReactMouseEvent,
+  type ReactNode,
   type TouchEvent as ReactTouchEvent,
 } from "react";
 import { createPortal } from "react-dom";
@@ -41,6 +43,20 @@ function findTopLinkedItemAt(sx: number, sy: number): MapItem | null {
   return null;
 }
 
+function subscribeCoarsePointer(onChange: () => void) {
+  const mql = window.matchMedia("(pointer: coarse)");
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+
+function getCoarsePointerSnapshot() {
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
+function getCoarsePointerServerSnapshot() {
+  return false;
+}
+
 function openMapLink(
   href: string,
   router: ReturnType<typeof useRouter>,
@@ -64,6 +80,11 @@ function openMapLink(
 export default function Play() {
   const router = useRouter();
   const { setCursorLabel, setCursorMode } = useCursorContext();
+  const coarsePointer = useSyncExternalStore(
+    subscribeCoarsePointer,
+    getCoarsePointerSnapshot,
+    getCoarsePointerServerSnapshot
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const transformRef = useRef(transform);
@@ -359,7 +380,7 @@ export default function Play() {
 
   const coordReadout = (
     <div
-      style={{
+      className="hidden md:block" style={{
         position: "fixed",
         right: 24,
         bottom: 24,
@@ -386,10 +407,10 @@ export default function Play() {
 
   const minimap = (
     <div
+      className="left-4 md:left-10"
       style={{
         position: "fixed",
         bottom: 24,
-        left: TICK_OFFSET + 16,
         width: MINIMAP_W,
         height: MINIMAP_H,
         zIndex: 60,
@@ -438,19 +459,20 @@ export default function Play() {
           pointerEvents: "none",
         }}
       />
-      {/* Cursor dot */}
-      <div
-        style={{
-          position: "absolute",
-          left: cursorMinimapX - 3,
-          top: cursorMinimapY - 3,
-          width: 6,
-          height: 6,
-          borderRadius: "50%",
-          background: "#c97d2e",
-          pointerEvents: "none",
-        }}
-      />
+      {!coarsePointer ? (
+        <div
+          style={{
+            position: "absolute",
+            left: cursorMinimapX - 3,
+            top: cursorMinimapY - 3,
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            background: "#c97d2e",
+            pointerEvents: "none",
+          }}
+        />
+      ) : null}
     </div>
   );
 
@@ -469,11 +491,10 @@ export default function Play() {
         type="button"
         onClick={handleBack}
         aria-label="Go back to previous page"
+        className="top-3 left-3 md:top-9 md:left-9"
         style={{
           position: "fixed",
-          /* Top ruler ends at y = TICK_OFFSET; left ruler ends at x = TICK_OFFSET */
-          top: `calc(${TICK_OFFSET}px + 12px)`,
-          left: `calc(${TICK_OFFSET}px + 12px)`,
+          /* md+: below top ruler, right of left ruler; mobile: inset from viewport edge */
           zIndex: BACK_BTN_Z,
           cursor: "pointer",
           display: "flex",
@@ -495,7 +516,7 @@ export default function Play() {
       </button>
 
       {/* Top ruler */}
-      <div style={{
+      <div className="hidden md:block" style={{
         position: "fixed", top: 0, left: TICK_OFFSET, right: 0,
         height: TICK_OFFSET, zIndex: RULER_Z, pointerEvents: "none",
         background: RULER_BG,
@@ -513,7 +534,7 @@ export default function Play() {
       </div>
 
       {/* Left ruler */}
-      <div style={{
+      <div className="hidden md:block" style={{
         position: "fixed",
         top: TICK_OFFSET,
         left: 0,
@@ -545,16 +566,7 @@ export default function Play() {
         onMouseLeave={onCanvasMouseLeave}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
-        style={{
-          position: "absolute",
-          top: TICK_OFFSET,
-          left: TICK_OFFSET,
-          right: 0,
-          bottom: 0,
-          zIndex: 1,
-          cursor: "crosshair",
-          overflow: "hidden",
-        }}
+        className="absolute inset-0 z-[1] cursor-crosshair overflow-hidden md:top-6 md:left-6"
       >
         {mapReady && (
           <svg
@@ -571,20 +583,44 @@ export default function Play() {
 
             {/* Images placed at their x/y positions */}
             {CATEGORIES.flatMap((cat) =>
-              cat.items.map((item) => (
-                <image
-                  key={item.id}
-                  href={item.image}
-                  x={item.x}
-                  y={item.y}
-                  width={item.w}
-                  height={item.h}
-                  preserveAspectRatio="xMidYMid slice"
-                  style={{ cursor: item.link ? "pointer" : "inherit" }}
-                  onMouseEnter={() => setCursorLabel(item.hoverText)}
-                  onMouseLeave={() => setCursorLabel(null)}
-                />
-              ))
+              cat.items.flatMap((item) => {
+                const nodes: ReactNode[] = [
+                  <image
+                    key={item.id}
+                    href={item.image}
+                    x={item.x}
+                    y={item.y}
+                    width={item.w}
+                    height={item.h}
+                    preserveAspectRatio="xMidYMid slice"
+                    style={{ cursor: item.link ? "pointer" : "inherit" }}
+                    {...(!coarsePointer
+                      ? {
+                          onMouseEnter: () => setCursorLabel(item.hoverText),
+                          onMouseLeave: () => setCursorLabel(null),
+                        }
+                      : {})}
+                  />,
+                ];
+                if (coarsePointer) {
+                  nodes.push(
+                    <text
+                      key={`${item.id}-caption`}
+                      x={item.x + item.w / 2}
+                      y={item.y + item.h + 24}
+                      textAnchor="middle"
+                      fontFamily="var(--font-instrument-sans, ui-sans-serif, system-ui)"
+                      fontSize={10}
+                      fill="#514433"
+                      letterSpacing="-0.04em"
+                      pointerEvents="none"
+                    >
+                      {item.hoverText}
+                    </text>
+                  );
+                }
+                return nodes;
+              })
             )}
 
             {/* Category label above each cluster */}
@@ -616,7 +652,7 @@ export default function Play() {
         ? createPortal(
             <>
               {minimap}
-              {coordReadout}
+              {!coarsePointer ? coordReadout : null}
             </>,
             document.body
           )

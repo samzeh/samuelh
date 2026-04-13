@@ -24,7 +24,7 @@ function getFinePointerHoverServerSnapshot() {
 }
 
 export default function Cursor() {
-  const { hoverText, cursorEnabled, setCursorLabel } = useCursorContext();
+  const { hoverText, cursorEnabled, setCursorLabel, cursorMode } = useCursorContext();
   const pathname = usePathname();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const finePointerHover = useSyncExternalStore(
@@ -34,7 +34,11 @@ export default function Cursor() {
   );
 
   const isPill = Boolean(hoverText);
-  const active = finePointerHover && cursorEnabled;
+  const customCursorEligible = finePointerHover && cursorEnabled;
+  /** Play map: hide native cursor + show overlay only for the pill; otherwise use CSS crosshair on the canvas. */
+  const showCursorOverlay =
+    customCursorEligible &&
+    (cursorMode !== "play" || isPill);
 
   /** Bump when switching arrow → pill so the pill remounts and plays `.cursor-pill-enter`. */
   const [pillSession, setPillSession] = useState(0);
@@ -57,13 +61,13 @@ export default function Cursor() {
   // Footer toys call setCursorEnabled(false) → active false → class removed.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    document.body.style.cursor = active ? "none" : "auto";
-    root.classList.toggle("custom-cursor", active);
+    document.body.style.cursor = showCursorOverlay ? "none" : "auto";
+    root.classList.toggle("custom-cursor", showCursorOverlay);
     return () => {
       document.body.style.cursor = "auto";
       root.classList.remove("custom-cursor");
     };
-  }, [active]);
+  }, [showCursorOverlay]);
 
   // Track mouse position continuously
   useEffect(() => {
@@ -82,7 +86,7 @@ export default function Cursor() {
     setCursorLabel(null);
   }, [pathname, setCursorLabel]);
 
-  if (!active) return null;
+  if (!showCursorOverlay) return null;
 
   const arrowEase = "cubic-bezier(0.22, 1, 0.36, 1)";
   const arrowTransition = `opacity 0.2s ease-out, transform 0.24s ${arrowEase}`;
@@ -98,6 +102,7 @@ export default function Cursor() {
     >
       {/* Fixed anchor box (arrow tip ~ upper-left of this region); pill expands from same origin */}
       <div className="relative h-[65px] w-[84px] overflow-visible">
+        {cursorMode !== "play" && (
         <div
           className="pointer-events-none absolute inset-0 flex items-center justify-center"
           style={{
@@ -147,6 +152,7 @@ export default function Cursor() {
             </defs>
           </svg>
         </div>
+        )}
 
         <div
           key={pillSession}

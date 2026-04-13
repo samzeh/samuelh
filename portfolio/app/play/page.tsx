@@ -5,12 +5,16 @@ import {
   useState,
   useCallback,
   useEffect,
+  useLayoutEffect,
   type MouseEvent as ReactMouseEvent,
   type TouchEvent as ReactTouchEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 
+import { useCursorContext } from "@/app/components/CursorContext";
 import { PlayMapPaths } from "./PlayMapPaths";
+import { CATEGORIES, type MapItem } from "./playmapdata";
 
 const SVG_WIDTH = 3458;
 const SVG_HEIGHT = 2236;
@@ -20,13 +24,49 @@ const TICK_OFFSET = 24;
 const MINIMAP_W = 200;
 const MINIMAP_H = Math.round(MINIMAP_W * (SVG_HEIGHT / SVG_WIDTH));
 const RULER_BG = "#f5f4f0";
-/** Above pan canvas (1); below custom cursor (50) and HUD/minimap (58–60). */
 const RULER_Z = 55;
-const CORNER_Z = 56;
+/** Below rulers (55) so the ruler strips paint above / left of the control. */
+const BACK_BTN_Z = 50;
+/** Clicks under this many CSS px of movement (from pointer down) count as taps, not pans. */
+const CLICK_MAX_DRAG_PX = 8;
+
+const ITEMS_PAINT_ORDER = CATEGORIES.flatMap((c) => c.items);
+
+function findTopLinkedItemAt(sx: number, sy: number): MapItem | null {
+  for (let i = ITEMS_PAINT_ORDER.length - 1; i >= 0; i--) {
+    const it = ITEMS_PAINT_ORDER[i]!;
+    if (!it.link) continue;
+    if (sx >= it.x && sx <= it.x + it.w && sy >= it.y && sy <= it.y + it.h) return it;
+  }
+  return null;
+}
+
+function openMapLink(
+  href: string,
+  router: ReturnType<typeof useRouter>,
+  e?: ReactMouseEvent<HTMLDivElement>
+) {
+  const forceNewTab = Boolean(e?.ctrlKey || e?.metaKey || e?.shiftKey || e?.altKey);
+  const external = /^https?:\/\//i.test(href) || href.startsWith("//");
+  if (external) {
+    window.open(href, "_blank", "noopener,noreferrer");
+    return;
+  }
+  if (href.startsWith("mailto:") || href.startsWith("tel:")) {
+    window.location.href = href;
+    return;
+  }
+  const path = href.startsWith("/") ? href : `/${href}`;
+  if (forceNewTab) window.open(path, "_blank", "noopener,noreferrer");
+  else router.push(path);
+}
 
 export default function Play() {
+  const router = useRouter();
+  const { setCursorLabel, setCursorMode } = useCursorContext();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
+  const transformRef = useRef(transform);
   const [viewportSize, setViewportSize] = useState({ w: 0, h: 0 });
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [minimapMounted, setMinimapMounted] = useState(false);
@@ -34,11 +74,25 @@ export default function Play() {
   const isPanning = useRef(false);
   const startPoint = useRef({ x: 0, y: 0 });
   const startTransform = useRef({ x: 0, y: 0 });
+  const panMaxDistRef = useRef(0);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const touchMaxDistRef = useRef(0);
+  /** Map-space pointer; updated every move, read by throttled setCursor. */
+  const cursorMapRef = useRef({ x: 0, y: 0 });
+  const cursorRafRef = useRef<number | null>(null);
 
   const MIN_SCALE = 0.7;
   const MAX_SCALE = 8;
 
   const clampScale = (s: number) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, s));
+
+  const handleBack = useCallback(() => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+      return;
+    }
+    router.push("/");
+  }, [router]);
 
   const clampTranslation = useCallback((x: number, y: number, scale: number) => {
     if (!containerRef.current) return { x, y };
@@ -59,43 +113,80 @@ export default function Play() {
   const onMouseDown = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
     isPanning.current = true;
+    panMaxDistRef.current = 0;
     startPoint.current = { x: e.clientX, y: e.clientY };
-    startTransform.current = { x: transform.x, y: transform.y };
+    const t = transformRef.current;
+    startTransform.current = { x: t.x, y: t.y };
     e.currentTarget.style.cursor = "grabbing";
-  }, [transform]);
-
-  const onMouseMove = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const canvasX = e.clientX - rect.left;
-      const canvasY = e.clientY - rect.top;
-      setCursor({
-        x: (canvasX - transform.x) / transform.scale,
-        y: (canvasY - transform.y) / transform.scale,
-      });
-    }
-    if (!isPanning.current) return;
-    const dx = e.clientX - startPoint.current.x;
-    const dy = e.clientY - startPoint.current.y;
-    const raw = {
-      x: startTransform.current.x + dx,
-      y: startTransform.current.y + dy,
-    };
-    const clamped = clampTranslation(raw.x, raw.y, transform.scale);
-    setTransform((t) => ({ ...t, ...clamped }));
-  }, [transform, clampTranslation]);
-
-  const onMouseUp = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
-    isPanning.current = false;
-    if (e.currentTarget) e.currentTarget.style.cursor = "grab";
   }, []);
+
+  const flushCursorUi = useCallback(() => {
+    cursorRafRef.current = null;
+    const { x, y } = cursorMapRef.current;
+    setCursor((prev) =>
+      prev.x === x && prev.y === y ? prev : { x, y }
+    );
+  }, []);
+
+  const onMouseMove = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const canvasX = e.clientX - rect.left;
+        const canvasY = e.clientY - rect.top;
+        const t = transformRef.current;
+        cursorMapRef.current = {
+          x: (canvasX - t.x) / t.scale,
+          y: (canvasY - t.y) / t.scale,
+        };
+        if (cursorRafRef.current === null) {
+          cursorRafRef.current = requestAnimationFrame(flushCursorUi);
+        }
+      }
+      if (!isPanning.current) return;
+      const dx = e.clientX - startPoint.current.x;
+      const dy = e.clientY - startPoint.current.y;
+      panMaxDistRef.current = Math.max(
+        panMaxDistRef.current,
+        Math.hypot(dx, dy)
+      );
+      setTransform((prev) => {
+        const clamped = clampTranslation(
+          startTransform.current.x + dx,
+          startTransform.current.y + dy,
+          prev.scale
+        );
+        if (prev.x === clamped.x && prev.y === clamped.y) return prev;
+        return { ...prev, ...clamped };
+      });
+    },
+    [clampTranslation, flushCursorUi]
+  );
+
+  const onMouseUp = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      const el = containerRef.current;
+      if (e.button === 0 && el && panMaxDistRef.current <= CLICK_MAX_DRAG_PX) {
+        const t = transformRef.current;
+        const rect = el.getBoundingClientRect();
+        const sx = (e.clientX - rect.left - t.x) / t.scale;
+        const sy = (e.clientY - rect.top - t.y) / t.scale;
+        const hit = findTopLinkedItemAt(sx, sy);
+        if (hit?.link) openMapLink(hit.link, router, e);
+      }
+      isPanning.current = false;
+      if (e.currentTarget) e.currentTarget.style.cursor = "crosshair";
+    },
+    [router]
+  );
 
   const onCanvasMouseLeave = useCallback(
     (e: ReactMouseEvent<HTMLDivElement>) => {
       setPointerInCanvas(false);
+      setCursorLabel(null);
       onMouseUp(e);
     },
-    [onMouseUp]
+    [onMouseUp, setCursorLabel]
   );
 
   const onWheel = useCallback((e: WheelEvent) => {
@@ -120,6 +211,13 @@ export default function Play() {
   const lastTouches = useRef<TouchPoint[] | null>(null);
 
   const onTouchStart = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      const t0 = e.touches[0]!;
+      touchStartRef.current = { x: t0.clientX, y: t0.clientY };
+      touchMaxDistRef.current = 0;
+    } else {
+      touchStartRef.current = null;
+    }
     lastTouches.current = Array.from(e.touches).map((t) => ({
       clientX: t.clientX,
       clientY: t.clientY,
@@ -129,9 +227,18 @@ export default function Play() {
   const onTouchMove = useCallback((e: TouchEvent) => {
     e.preventDefault();
     const touches = e.touches;
+    if (touches.length !== 1) touchStartRef.current = null;
     if (touches.length === 1 && lastTouches.current?.length === 1) {
       const dx = touches[0].clientX - lastTouches.current[0]!.clientX;
       const dy = touches[0].clientY - lastTouches.current[0]!.clientY;
+      if (touchStartRef.current) {
+        const ox = touches[0].clientX - touchStartRef.current.x;
+        const oy = touches[0].clientY - touchStartRef.current.y;
+        touchMaxDistRef.current = Math.max(
+          touchMaxDistRef.current,
+          Math.hypot(ox, oy)
+        );
+      }
       setTransform((t) => {
         const clamped = clampTranslation(t.x + dx, t.y + dy, t.scale);
         return { ...t, ...clamped };
@@ -169,14 +276,33 @@ export default function Play() {
     }));
   }, [clampTranslation]);
 
-  const onTouchEnd = useCallback(() => {
-    lastTouches.current = null;
-  }, []);
+  const onTouchEnd = useCallback(
+    (e: ReactTouchEvent<HTMLDivElement>) => {
+      const el = containerRef.current;
+      const tch = e.changedTouches[0];
+      if (
+        el &&
+        tch &&
+        touchStartRef.current &&
+        e.touches.length === 0 &&
+        touchMaxDistRef.current <= CLICK_MAX_DRAG_PX
+      ) {
+        const t = transformRef.current;
+        const rect = el.getBoundingClientRect();
+        const sx = (tch.clientX - rect.left - t.x) / t.scale;
+        const sy = (tch.clientY - rect.top - t.y) / t.scale;
+        const hit = findTopLinkedItemAt(sx, sy);
+        if (hit?.link) openMapLink(hit.link, router);
+      }
+      touchStartRef.current = null;
+      lastTouches.current = null;
+    },
+    [router]
+  );
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
     const updateSize = () =>
       setViewportSize({ w: el.clientWidth, h: el.clientHeight });
     updateSize();
@@ -190,9 +316,30 @@ export default function Play() {
     };
   }, [onWheel, onTouchMove]);
 
+  useLayoutEffect(() => {
+    transformRef.current = transform;
+  }, [transform]);
+
+  useEffect(() => {
+    return () => {
+      if (cursorRafRef.current !== null) {
+        cancelAnimationFrame(cursorRafRef.current);
+        cursorRafRef.current = null;
+      }
+    };
+  }, []);
+
   useEffect(() => {
     queueMicrotask(() => setMinimapMounted(true));
   }, []);
+
+  useEffect(() => {
+    setCursorMode("play");
+    return () => {
+      setCursorMode("default");
+      setCursorLabel(null);
+    };
+  }, [setCursorMode, setCursorLabel]);
 
   const cw = viewportSize.w;
   const ch = viewportSize.h;
@@ -202,7 +349,6 @@ export default function Play() {
     ? `${-transform.x / s} ${-transform.y / s} ${cw / s} ${ch / s}`
     : `0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`;
 
-  // Minimap: viewport rect in minimap space
   const minimapScale = MINIMAP_W / SVG_WIDTH;
   const rectW = Math.min(MINIMAP_W, (cw / transform.scale) * minimapScale);
   const rectH = Math.min(MINIMAP_H, (ch / transform.scale) * minimapScale);
@@ -224,7 +370,7 @@ export default function Play() {
         lineHeight: 1.4,
         letterSpacing: "-0.02em",
         color: "#514433",
-        background: "rgba(245,244, 240, 0.94)",
+        background: "rgba(245,244,240,0.94)",
         border: "1px solid #ccc",
         borderRadius: 4,
         padding: "6px 10px",
@@ -263,7 +409,23 @@ export default function Play() {
         xmlns="http://www.w3.org/2000/svg"
       >
         <PlayMapPaths />
+
+        {/* Red squares for each item on the minimap */}
+        {CATEGORIES.flatMap((cat) =>
+          cat.items.map((item) => (
+            <rect
+              key={item.id}
+              x={item.x}
+              y={item.y}
+              width={item.w}
+              height={item.h}
+              fill="rgba(200,40,40,0.8)"
+            />
+          ))
+        )}
       </svg>
+
+      {/* Viewport rect */}
       <div
         style={{
           position: "absolute",
@@ -276,6 +438,7 @@ export default function Play() {
           pointerEvents: "none",
         }}
       />
+      {/* Cursor dot */}
       <div
         style={{
           position: "absolute",
@@ -302,6 +465,34 @@ export default function Play() {
         position: "relative",
       }}
     >
+      <button
+        type="button"
+        onClick={handleBack}
+        aria-label="Go back to previous page"
+        style={{
+          position: "fixed",
+          /* Top ruler ends at y = TICK_OFFSET; left ruler ends at x = TICK_OFFSET */
+          top: `calc(${TICK_OFFSET}px + 12px)`,
+          left: `calc(${TICK_OFFSET}px + 12px)`,
+          zIndex: BACK_BTN_Z,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          padding: "4px 12px",
+          fontFamily: "var(--font-instrument-sans, ui-sans-serif, system-ui)",
+          fontSize: 14,
+          letterSpacing: "-0.06em",
+          color: "#514433",
+          background: "rgba(245,244,240,0.96)",
+          border: "1px solid #ccc",
+          borderRadius: 6,
+          boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+        }}
+      >
+
+        Back
+      </button>
 
       {/* Top ruler */}
       <div style={{
@@ -321,7 +512,7 @@ export default function Play() {
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: "#ccc" }} />
       </div>
 
-      {/* Left ruler — solid bg + high z so it isn’t lost under layout / map edge */}
+      {/* Left ruler */}
       <div style={{
         position: "fixed",
         top: TICK_OFFSET,
@@ -361,7 +552,7 @@ export default function Play() {
           right: 0,
           bottom: 0,
           zIndex: 1,
-          cursor: "grab",
+          cursor: "crosshair",
           overflow: "hidden",
         }}
       >
@@ -377,6 +568,46 @@ export default function Play() {
             shapeRendering="geometricPrecision"
           >
             <PlayMapPaths />
+
+            {/* Images placed at their x/y positions */}
+            {CATEGORIES.flatMap((cat) =>
+              cat.items.map((item) => (
+                <image
+                  key={item.id}
+                  href={item.image}
+                  x={item.x}
+                  y={item.y}
+                  width={item.w}
+                  height={item.h}
+                  preserveAspectRatio="xMidYMid slice"
+                  style={{ cursor: item.link ? "pointer" : "inherit" }}
+                  onMouseEnter={() => setCursorLabel(item.hoverText)}
+                  onMouseLeave={() => setCursorLabel(null)}
+                />
+              ))
+            )}
+
+            {/* Category label above each cluster */}
+            {CATEGORIES.map((cat) => {
+              const topY = Math.min(...cat.items.map((i) => i.y));
+              const avgX = cat.items.reduce((sum, i) => sum + i.x + i.w / 2, 0) / cat.items.length;
+              return (
+                <text
+                  key={cat.id}
+                  x={avgX}
+                  y={topY - 24}
+                  textAnchor="middle"
+                  fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+                  fontSize={28}
+                  fill="#514433"
+                  opacity={0.5}
+                  letterSpacing="-0.03em"
+                  pointerEvents="none"
+                >
+                  {cat.label}
+                </text>
+              );
+            })}
           </svg>
         )}
       </div>
@@ -390,7 +621,6 @@ export default function Play() {
             document.body
           )
         : null}
-
     </div>
   );
 }

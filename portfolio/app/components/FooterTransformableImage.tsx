@@ -271,7 +271,7 @@ export default function FooterTransformableImage({
           <button aria-label={`Resize ${alt} bottom right`} onPointerDown={startResize('se')} className="absolute -bottom-1.5 -right-1.5 z-20 h-3 w-3 border-2 border-[#2196F3] bg-white" />
 
           {showSizeBadge && (
-            <div className="absolute -bottom-12 left-1/2 z-20 max-w-none -translate-x-1/2 whitespace-nowrap rounded-md bg-[#2196F3] px-3 py-1 text-sm font-semibold leading-none text-white tabular-nums">
+            <div className="absolute -bottom-8 left-1/2 z-20 max-w-none -translate-x-1/2 whitespace-nowrap rounded-md bg-[#2196F3] px-3 py-1 text-sm font-semibold leading-none text-white tabular-nums">
               {Math.round(box.width)} × {Math.round(box.height)}
             </div>
           )}

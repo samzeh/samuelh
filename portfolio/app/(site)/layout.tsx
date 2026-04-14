@@ -2,12 +2,17 @@ import FooterContent from "@/app/components/FooterContent";
 import Nav from "@/app/components/Nav";
 import Status from "@/app/components/Status";
 
+const FOOTER_REVEAL_HEIGHT = "30rem";
+
 export default function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <footer className="fixed bottom-0 left-0 right-0 z-0 h-120 bg-[#FFFCF9]">
+      <footer
+        className="fixed bottom-0 left-0 right-0 z-0 bg-[#FFFCF9]"
+        style={{ height: FOOTER_REVEAL_HEIGHT }}
+      >
         <FooterContent />
       </footer>
       <div className="relative z-10 pointer-events-none">
@@ -18,7 +23,7 @@ export default function SiteLayout({
           </header>
           <main className="flex min-h-0 w-full flex-1 flex-col">{children}</main>
         </div>
-        <div aria-hidden className="h-110" />
+        <div aria-hidden style={{ height: FOOTER_REVEAL_HEIGHT }} />
       </div>
     </>
   );

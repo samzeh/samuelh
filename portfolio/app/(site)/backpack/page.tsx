@@ -85,21 +85,48 @@ export default function BackpackPage() {
     if (isMobile) return;
     const el = containerRef.current;
     if (!el) return;
-    const onWheel = (e: WheelEvent) => { 
-      // Allow pass-through for downward scroll once animation is complete
-      if (scrollYRef.current >= SCROLL_DISTANCE && e.deltaY > 0) return;
-      e.preventDefault(); 
-      updateScroll(e.deltaY); 
+    const onWheel = (e: WheelEvent) => {
+      const atTop = el.scrollTop <= 1;
+
+      // Scroll down: play animation first, then allow normal page scroll.
+      if (e.deltaY > 0) {
+        if (scrollYRef.current < SCROLL_DISTANCE) {
+          e.preventDefault();
+          updateScroll(e.deltaY);
+        }
+        return;
+      }
+
+      // Scroll up: if page can scroll up, let native scroll happen.
+      // Only run reverse animation when already at page top.
+      if (e.deltaY < 0 && atTop && scrollYRef.current > 0) {
+        e.preventDefault();
+        updateScroll(e.deltaY);
+      }
     };
     let touchStartY = 0;
     const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
     const onTouchMove = (e: TouchEvent) => {
-      const dy = touchStartY - e.touches[0].clientY;
-      // Allow pass-through for downward scroll once animation is complete
-      if (scrollYRef.current >= SCROLL_DISTANCE && dy > 0) return;
-      e.preventDefault();
-      touchStartY = e.touches[0].clientY;
-      updateScroll(dy);
+      const nextY = e.touches[0].clientY;
+      const dy = touchStartY - nextY;
+      touchStartY = nextY;
+      const atTop = el.scrollTop <= 1;
+
+      // Swipe up (content goes down): play animation first, then native scroll.
+      if (dy > 0) {
+        if (scrollYRef.current < SCROLL_DISTANCE) {
+          e.preventDefault();
+          updateScroll(dy);
+        }
+        return;
+      }
+
+      // Swipe down (content goes up): allow native scroll unless we're at top,
+      // then reverse the animation timeline.
+      if (dy < 0 && atTop && scrollYRef.current > 0) {
+        e.preventDefault();
+        updateScroll(dy);
+      }
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     el.addEventListener("touchstart", onTouchStart, { passive: true });

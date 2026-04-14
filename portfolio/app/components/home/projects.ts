@@ -36,7 +36,7 @@ export const projects: Project[] = [
     year: 2025,
     vimeoId: "1182442714",
     aspectRatio: "3/1.5",
-    cursorText: "coming soon",
+    cursorText: "view case study",
   },
   {
     id: 4,

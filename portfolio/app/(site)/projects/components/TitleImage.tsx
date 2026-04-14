@@ -6,25 +6,42 @@ type StatItem = {
 };
 
 interface TitleImageProps {
-  src: string;
-  alt: string;
+  src?: string;
+  alt?: string;
+  vimeoId?: string;
+  zoom?: number;
   stats: StatItem[];
 }
 
-export default function TitleImage({ src, alt, stats }: TitleImageProps) {
+export default function TitleImage({ src, alt, vimeoId, zoom = 1, stats }: TitleImageProps) {
   return (
     <div className="flex flex-col w-full">
-      {/* Top image with responsive rounding */}
+      {/* Top media with responsive rounding */}
       <div
         className="relative overflow-hidden rounded-t-sm md:rounded-t-md border border-[#E7EEF3]"
         style={{ aspectRatio: "16/9" }}
       >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover object-center"
-        />
+        {vimeoId ? (
+          <iframe
+            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&loop=1&background=1`}
+            className="absolute top-1/2 left-1/2 pointer-events-none"
+            style={{
+              width: `${zoom * 100}%`,
+              height: `${zoom * 100}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        ) : src ? (
+          <Image
+            src={src}
+            alt={alt ?? ""}
+            fill
+            className="object-cover object-center"
+          />
+        ) : null}
       </div>
 
       {/* Stats bar with responsive rounding */}

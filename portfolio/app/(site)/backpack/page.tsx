@@ -293,6 +293,7 @@ export default function BackpackPage() {
   const gridCellSize = 169;
   const gridGap = isMobile ? 8 : 10;
   const emptyCellCount = isMobile ? 0 : 3;
+  const mobileContentHeight = "calc(7vh + min(62vh, 418px) + 10px + min(88vw, 352px) + 24px)";
 
   const selectedItem = ITEMS.find((it) => it.id === selectedId) ?? ITEMS[0];
   const phase2Active = isMobile ? true : p2e > 0.5;
@@ -310,9 +311,9 @@ export default function BackpackPage() {
       style={{
         position: "relative",
         width: "100%",
-        height: "100vh",
+        height: isMobile ? mobileContentHeight : "100vh",
         background: "#fff",
-        overflow: isMobile ? "hidden" : "auto",
+        overflow: isMobile ? "visible" : "auto",
         cursor: "default",
       }}
     >

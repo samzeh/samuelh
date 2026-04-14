@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState, useCallback, type PointerEvent as ReactPointerEvent } from "react";
 
 const ITEMS = [
-  { id: 0, label: "power bank for my terrible battery life",    src: "/items/charger.png",  rotation: -12 },
-  { id: 1, label: "paper > digital",   src: "/items/paper.png",    rotation: 3  },
-  { id: 2, label: "my prized possession", src: "/items/ti84.png",     rotation: -8 },
-  { id: 3, label: "i've lost at least 3 of these",  src: "/items/water.png",    rotation: 5  },
-  { id: 4, label: "the backpack i've had since 7th grade",      src: "/items/backpack.png", rotation: 0  },
+  { id: 0, label: "the backpack i've had since 7th grade",      src: "/items/backpack.png", rotation: 0  },
+  { id: 1, label: "power bank for my terrible battery life",    src: "/items/charger.png",  rotation: -12 },
+  { id: 2, label: "paper > digital",   src: "/items/paper.png",    rotation: 3  },
+  { id: 3, label: "my prized possession", src: "/items/ti84.png",     rotation: -8 },
+  { id: 4, label: "i've lost at least 3 of these",  src: "/items/water.png",    rotation: 5  },
   { id: 5, label: "for coding (youtube)",       src: "/items/macbook.png",  rotation: 8  },
   { id: 6, label: "ex swimmer",  src: "/items/cobra.png",    rotation: -5 },
   { id: 7, label: "arguably one of the best led pencils",  src: "/items/pencil.png",   rotation: -20 },
@@ -51,7 +51,7 @@ export default function BackpackPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProg, setScrollProg] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedId, setSelectedId] = useState(4); // backpack selected by default
+  const [selectedId, setSelectedId] = useState(0); // backpack selected by default
   const [selectedScatterId, setSelectedScatterId] = useState<number | null>(null);
   const [scatterBoxes, setScatterBoxes] = useState<Record<number, ScatterBox>>({});
   const scrollYRef = useRef(0);
@@ -82,6 +82,7 @@ export default function BackpackPage() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     const el = containerRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => { 
@@ -108,7 +109,7 @@ export default function BackpackPage() {
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchmove", onTouchMove);
     };
-  }, [updateScroll]);
+  }, [updateScroll, isMobile]);
 
   const getScatterBox = useCallback(
     (itemId: number): ScatterBox => {
@@ -137,7 +138,7 @@ export default function BackpackPage() {
   const onScatterPointerDown = useCallback(
     (e: ReactPointerEvent<HTMLDivElement>, itemId: number) => {
       // Keep transform editing limited to the initial spread-out phase.
-      if (itemId === 4 || scrollProg > 0.12 || isMobile) return;
+      if (itemId === 0 || scrollProg > 0.12 || isMobile) return;
       const existing = getScatterBox(itemId);
       scatterInteractionRef.current = {
         type: "move",
@@ -155,7 +156,7 @@ export default function BackpackPage() {
 
   const onScatterResizePointerDown = useCallback(
     (e: ReactPointerEvent<HTMLButtonElement>, itemId: number, handle: Handle) => {
-      if (itemId === 4 || scrollProg > 0.12 || isMobile) return;
+      if (itemId === 0 || scrollProg > 0.12 || isMobile) return;
       const existing = getScatterBox(itemId);
       scatterInteractionRef.current = {
         type: "resize",
@@ -174,7 +175,7 @@ export default function BackpackPage() {
 
   const onScatterRotatePointerDown = useCallback(
     (e: ReactPointerEvent<HTMLButtonElement>, itemId: number) => {
-      if (itemId === 4 || scrollProg > 0.12 || isMobile) return;
+      if (itemId === 0 || scrollProg > 0.12 || isMobile) return;
       const box = getScatterBox(itemId);
       const base = getBasePositionPx(itemId);
       const rect = containerRef.current?.getBoundingClientRect();
@@ -280,12 +281,12 @@ export default function BackpackPage() {
   const bpX = lerp(BP_START_X, BP_END_X, p2e);
   const bpY = lerp(BP_START_Y, BP_END_Y, p2e);
   const bpSize = lerp(200, 260, p2e);
-  const shellTop = isMobile ? "62%" : "54%";
+  const shellTop = isMobile ? "7vh" : "54%";
   const shellBaseTransform = isMobile ? "translate(-50%, 0)" : "translate(-50%, -50%)";
   const shellGap = isMobile ? 10 : 20;
-  const leftPanelWidth = isMobile ? 255 : 449;
-  const leftPanelHeight = isMobile ? 300 : 529;
-  const leftPanelPadding = isMobile ? "12px 10px" : "16px 14px";
+  const leftPanelWidth = isMobile ? "min(88vw, 352px)" : 449;
+  const leftPanelHeight = isMobile ? "min(62vh, 418px)" : 529;
+  const leftPanelPadding = isMobile ? "14px 12px" : "16px 14px";
   const leftImageWidth = isMobile ? "62%" : "78%";
   const gridCols = isMobile ? 3 : 4;
   const gridRows = 3;
@@ -293,9 +294,11 @@ export default function BackpackPage() {
   const gridGap = isMobile ? 8 : 10;
   const emptyCellCount = isMobile ? 0 : 3;
 
-  const selectedItem = ITEMS.find((it) => it.id === selectedId) ?? ITEMS[4];
-  const phase2Active = p2e > 0.5;
-  const phase2Opacity = p2e;
+  const selectedItem = ITEMS.find((it) => it.id === selectedId) ?? ITEMS[0];
+  const phase2Active = isMobile ? true : p2e > 0.5;
+  const phase2Opacity = isMobile ? 1 : p2e;
+  const phase2Shift = isMobile ? 0 : (1 - p2e) * 18;
+  const gridRevealProgress = isMobile ? 1 : p2;
 
   return (
     <div
@@ -309,16 +312,16 @@ export default function BackpackPage() {
         width: "100%",
         height: "100vh",
         background: "#fff",
-        overflow: "auto",
+        overflow: isMobile ? "hidden" : "auto",
         cursor: "default",
       }}
     >
       {/* ── Scattered items (Phase 1) ─────────────────────────────── */}
-      {ITEMS.map((item, i) => {
-        if (item.id === 4) return null;
+      {!isMobile && ITEMS.map((item, i) => {
+        if (item.id === 0) return null;
         const [sx, sy] = SCATTER[i];
         const box = getScatterBox(item.id);
-        const isEditable = item.id !== 4 && scrollProg <= 0.12 && !isMobile;
+        const isEditable = item.id !== 0 && scrollProg <= 0.12 && !isMobile;
         const isSelected = selectedScatterId === item.id && isEditable;
         const tx = lerp(sx, BP_START_X - 4, p1e);
         const ty = lerp(sy, BP_START_Y - 4, p1e);
@@ -441,33 +444,8 @@ export default function BackpackPage() {
         );
       })}
 
-      {/* ── Backpack: desktop flies, mobile stays bottom-center ───────────────── */}
-      {isMobile ? (
-        <div
-          style={{
-            position: "absolute",
-            left: `${BP_START_X}vw`,
-            top: `${BP_START_Y}vh`,
-            width: 200,
-            height: 240,
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            zIndex: 20,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            // Keep it static on mobile and fade away as phase 2 appears.
-            opacity: clamp(1 - p2e * 2.5, 0, 1),
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/items/backpack.png"
-            alt="Backpack"
-            style={{ width: "100%", flex: 1, objectFit: "contain", display: "block" }}
-          />
-        </div>
-      ) : (
+      {/* ── Backpack fly animation (desktop only) ───────────────── */}
+      {!isMobile && (
         <div
           style={{
             position: "absolute",
@@ -505,7 +483,7 @@ export default function BackpackPage() {
           gap: shellGap,
           flexDirection: isMobile ? "column" : "row",
           opacity: phase2Opacity,
-          transform: `${shellBaseTransform} translateY(${(1 - p2e) * 18}px)`,
+          transform: `${shellBaseTransform} translateY(${phase2Shift}px)`,
           willChange: "opacity, transform",
           alignItems: "flex-start",
           justifyContent: "center",
@@ -570,7 +548,7 @@ export default function BackpackPage() {
         >
           {ITEMS.map((item, i) => {
             const delay = i * 0.06;
-            const iOp = easeInOutQuad(clamp((p2 - delay * 0.5) / (1 - delay * 0.4), 0, 1));
+            const iOp = easeInOutQuad(clamp((gridRevealProgress - delay * 0.5) / (1 - delay * 0.4), 0, 1));
             const isSelected = item.id === selectedId;
             return (
               <div

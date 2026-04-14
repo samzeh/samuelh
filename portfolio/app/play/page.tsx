@@ -12,6 +12,7 @@ import {
   type TouchEvent as ReactTouchEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useCursorContext } from "@/app/components/CursorContext";
@@ -106,14 +107,6 @@ export default function Play() {
   const MAX_SCALE = 8;
 
   const clampScale = (s: number) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, s));
-
-  const handleBack = useCallback(() => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      router.back();
-      return;
-    }
-    router.push("/");
-  }, [router]);
 
   const clampTranslation = useCallback((x: number, y: number, scale: number) => {
     if (!containerRef.current) return { x, y };
@@ -487,10 +480,9 @@ export default function Play() {
         position: "relative",
       }}
     >
-      <button
-        type="button"
-        onClick={handleBack}
-        aria-label="Go back to previous page"
+      <Link
+        href="/"
+        aria-label="Go to home page"
         className="top-3 left-3 md:top-9 md:left-9"
         style={{
           position: "fixed",
@@ -513,7 +505,7 @@ export default function Play() {
       >
 
         Back
-      </button>
+      </Link>
 
       {/* Top ruler */}
       <div className="hidden md:block" style={{

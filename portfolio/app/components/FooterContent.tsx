@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import FooterTransformableImage from './FooterTransformableImage'
+import Link from 'next/link'
 
 type ImageConfig = {
   id: string
@@ -142,9 +143,9 @@ export default function FooterContent() {
           <a href="https://github.com/samzeh" target="_blank" rel="noopener noreferrer" className="hover:underline transition-all duration-200">
             github
           </a>
-          <a href="/path-to-backpack" className="bg-[#2F2211] text-xs md:text-lg text-[#FFFCF9] px-3 py-1 rounded-full hover:opacity-80 transition-opacity duration-200">
+          <Link href="/backpack" className="bg-[#2F2211] text-xs md:text-lg text-[#FFFCF9] px-3 py-1 rounded-full hover:opacity-80 transition-opacity duration-200">
             backpack
-          </a>
+          </Link>
         </div>
       </div>
     </div>

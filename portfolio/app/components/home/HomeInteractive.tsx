@@ -59,7 +59,7 @@ export function HomeInteractive() {
   )
 
   const getZ = useCallback(
-    (name: 'lelamp' | 'socratica' | 'painting') => getImageStackZ(imageHover, name),
+    (name: 'hardhat' | 'socratica' | 'painting') => getImageStackZ(imageHover, name),
     [imageHover]
   )
 
@@ -226,14 +226,14 @@ export function HomeInteractive() {
           <div className={`flex -space-x-4 ${hoverKey ? 'opacity-20' : ''}`}>
             <div
               className="relative"
-              style={{ zIndex: getZ('lelamp') }}
-              onMouseEnter={() => setImageHover('lelamp')}
+              style={{ zIndex: getZ('hardhat') }}
+              onMouseEnter={() => setImageHover('hardhat')}
               onMouseLeave={() => setImageHover(null)}
             >
-              {imageHover === 'lelamp' && (
+              {imageHover === 'hardhat' && (
                 <div className="absolute -top-5.5 left-[50%] -translate-x-[65%] pointer-events-none justify-center w-full">
                   <div className="tooltip-pop">
-                    <ToolTip tooltipText="lelamp :)" />
+                    <ToolTip tooltipText="hardhat :)" />
                   </div>
                 </div>
               )}
@@ -241,12 +241,12 @@ export function HomeInteractive() {
                 className="transition-all duration-300 ease-out"
                 style={{
                   transform:
-                    imageHover === 'lelamp'
+                    imageHover === 'hardhat'
                       ? 'scale(1.1) rotate(12deg)'
                       : 'scale(1) rotate(0deg)',
                 }}
               >
-                <ImageFrame src="/lelamp.png" alt="lelamp" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-8.54deg" delay="0.08s" />
+                <ImageFrame src="/hardhat.png" alt="hardhat" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-8.54deg" delay="0.08s" />
               </div>
             </div>
 

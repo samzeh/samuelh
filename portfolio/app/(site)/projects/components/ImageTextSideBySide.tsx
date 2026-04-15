@@ -32,16 +32,18 @@ export default function ImageTextSideBySide({
 }: ImageTextSideBySideProps) {
   const imageCardWidth = imageWidth;
   const imageCount = Math.max(images.length, 1);
+  const isSingleImage = imageCount === 1;
   const imageGapPx = 16;
+  const sectionGap = isSingleImage ? Math.min(gap, 12) : gap;
 
   return (
     <div
       className="flex flex-col md:flex-row items-start w-full my-8"
-      style={{ gap }}
+      style={{ gap: sectionGap }}
     >
       {/* Images */}
       <div
-        className={`w-full md:basis-[60%] md:max-w-[60%] md:min-w-0 md:shrink flex justify-center md:flex-wrap gap-4 ${
+        className={`w-full ${isSingleImage ? "md:basis-[40%] md:max-w-[40%]" : "md:basis-[60%] md:max-w-[60%]"} md:min-w-0 md:shrink flex justify-center md:flex-wrap gap-4 ${
           imageLeft ? "md:justify-start" : "md:justify-end"
         } ${
           imageLeft ? "md:order-1" : "md:order-2"
@@ -85,7 +87,7 @@ export default function ImageTextSideBySide({
 
       {/* Text */}
       <div
-        className={`w-full md:basis-[40%] md:flex-1 min-w-0 flex flex-col items-start justify-start ${
+        className={`w-full ${isSingleImage ? "md:basis-[60%]" : "md:basis-[40%]"} md:flex-1 min-w-0 flex flex-col items-start justify-start ${
           imageLeft ? "md:order-2" : "md:order-1"
         }`}
       >

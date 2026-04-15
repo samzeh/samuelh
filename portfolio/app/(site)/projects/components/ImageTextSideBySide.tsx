@@ -31,6 +31,8 @@ export default function ImageTextSideBySide({
   aspectRatio,
 }: ImageTextSideBySideProps) {
   const imageCardWidth = imageWidth;
+  const imageCount = Math.max(images.length, 1);
+  const imageGapPx = 16;
 
   return (
     <div
@@ -39,7 +41,7 @@ export default function ImageTextSideBySide({
     >
       {/* Images */}
       <div
-        className={`w-full md:w-auto md:min-w-max md:shrink-0 flex flex-wrap gap-4 ${
+        className={`w-full md:basis-[60%] md:max-w-[60%] md:min-w-0 md:shrink flex justify-center md:flex-wrap gap-4 ${
           imageLeft ? "md:justify-start" : "md:justify-end"
         } ${
           imageLeft ? "md:order-1" : "md:order-2"
@@ -48,10 +50,17 @@ export default function ImageTextSideBySide({
         {images.map((img, i) => (
           <div
             key={`${img.src}-${i}`}
-            className="relative w-full md:w-(--itsb-card-width) md:flex-none"
+            className="relative flex-none md:flex-1 md:min-w-0 lg:w-(--itsb-card-width) lg:flex-none"
 
             style={{
-              maxWidth: `${imageCardWidth}px`,
+              width:
+                imageCount > 1
+                  ? `calc((100% - ${(imageCount - 1) * imageGapPx}px) / ${imageCount})`
+                  : `min(100%, ${imageCardWidth}px)`,
+              maxWidth:
+                imageCount > 1
+                  ? `min(${imageCardWidth}px, calc((100% - ${(imageCount - 1) * imageGapPx}px) / ${imageCount}))`
+                  : `${imageCardWidth}px`,
               // CSS var lets us keep full-width on mobile while fixing desktop card width.
               ["--itsb-card-width" as string]: `${imageCardWidth}px`,
               aspectRatio: aspectRatio
@@ -76,7 +85,7 @@ export default function ImageTextSideBySide({
 
       {/* Text */}
       <div
-        className={`w-full md:flex-1 min-w-0 flex flex-col items-start justify-start ${
+        className={`w-full md:basis-[40%] md:flex-1 min-w-0 flex flex-col items-start justify-start ${
           imageLeft ? "md:order-2" : "md:order-1"
         }`}
       >

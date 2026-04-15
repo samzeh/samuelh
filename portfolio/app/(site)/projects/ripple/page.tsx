@@ -241,7 +241,7 @@ export default function RippleCaseStudy() {
           🥉 We placed third at Bloom Designathon!
         </p>
 
-        <p className="text-detail-color">
+        <p className="text-detail-color font-semibold">
           Ripple taught me so many valuable lessons, most importantly:
         </p>
 

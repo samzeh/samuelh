@@ -176,7 +176,8 @@ export default function RippleCaseStudy() {
           Before Ferret, I had never done any user research or prototyping (or even used Figma). In fact,
           the prototypes in this case study were originally made in Canva before I later experimented with Figma.
         </p>
-        <p className="text-detail-color">
+        <br />
+        <p className="text-detail-color font-semibold">
           Here's a few notes on what I learned:
         </p>
         <p className="text-detail-color">

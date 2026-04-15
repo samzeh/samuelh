@@ -15,7 +15,7 @@ interface ExperienceObject {
 const experience: ExperienceObject[] = [
   {
     image: "/needlist.png",
-    alt: "needlist",
+    alt: "needlist.org",
     position: "technical project manager",
     date: "2026",
   },

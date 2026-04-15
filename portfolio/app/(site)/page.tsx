@@ -4,19 +4,40 @@ import { HomeInteractive } from "@/app/components/home/HomeInteractive";
 import React from "react";
 import ProjectCard from "@/app/components/home/ProjectCard";
 import { projects } from "@/app/components/home/projects";
+import Hyperlink from '../components/Hyperlink';
+import InlineItem from '../components/InlineItem';
 
 export default function Home() {
   return (
     <main className="flex flex-col mt-15">
       <HomeInteractive />
 
-      <div className="flex items-center gap-1.5 text-[15px] md:text-[18px] text-detail-color mt-1.5">
+      <div className="flex items-center gap-x-1 text-[15px] md:text-[18px] text-detail-color mt-1.5">
         <FaBriefcase />
-        <span>curr. tpm</span>
-        <Image src="/needlist.png" alt="needlist logo" width={20} height={20} className="rounded" />
-        <span>needlist.org, swe</span>
-        <Image src="/watai.png" alt="watai logo" width={20} height={20} className="rounded" />
-        <span>wat.ai</span>
+        <InlineItem
+          label="curr. tpm"
+          icon="/needlist.png"
+          iconAlt="needlist logo"
+        >
+          <Hyperlink
+            href="https://needlist.org"
+            text="needlist.org"
+            imageSrc="/needlistorg.png"
+            imageAlt="needlist"
+          />, swe
+        </InlineItem>
+        
+        <InlineItem
+          icon="/watai.png"
+          iconAlt="watai logo"
+        >
+          <Hyperlink
+            href="https://watai.ca"
+            text="wat.ai"
+            imageSrc="/vista4ph.png"
+            imageAlt="vista4ph"
+          />
+        </InlineItem>
       </div>
 
       {/* Mobile: one column */}

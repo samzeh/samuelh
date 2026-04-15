@@ -1,6 +1,8 @@
 import Polaroid from "./components/Polaroid";
 import SubstackThoughts from "./components/SubstackThoughts";
 import Image from "next/image";
+import InlineItem from "../../components/InlineItem";
+import Hyperlink from "../../components/Hyperlink";
 
 interface ExperienceObject {
   image: string;
@@ -39,11 +41,21 @@ export default function About() {
       <div className="flex flex-col-reverse md:flex-row md:items-start md:gap-16">
         <div className="flex flex-col max-w-lg">
           <h2 className="text-3xl md:text-4xl mb-3">about me</h2>
-          <p className="text-base md:text-[19px]">My name's Samuel, and I'm a student @ uwaterloo studying Systems Design Engineering.</p>
+          <span className="text-base md:text-[19px] block">
+            My name's Samuel, and I'm a student at
+            <span className="inline-block align-middle ml-2">
+              <InlineItem icon="/waterloo.png" iconAlt="watai logo">
+                waterloo
+              </InlineItem>
+            </span>
+            {/* Add a space after InlineItem */}
+            {" "}
+            studying <Hyperlink href="https://uwaterloo.ca/future-students/programs/systems-design-engineering" text="Systems Design Engineering" imageSrc="/sydeweb.png" imageAlt="syde"/>.
+          </span>
           <br />
-          <p className="text-base md:text-[19px]">I love to create. Whether it be experimenting to perfect the perfect chocolate chip recipe, or jumping on project ideas, trying new things is a big part of who I am.</p>
+          <span className="text-base md:text-[19px] block">I love to <span className="font-semibold text-green-600">create</span>. Whether it be experimenting to perfect the perfect <Hyperlink href="https://stirringtheglobe.wordpress.com/" text="chocolate chip recipe" imageSrc="/foodblog.png" imageAlt="food blog"/>, or jumping on project ideas, trying new things is a big part of who I am.</span>
           <br />
-          <p className="text-base md:text-[19px]">As of right now, however, I'm exploring the intersections technology has with business + art.</p>
+          <p className="text-base md:text-[19px]">As of right now, however, I'm exploring the intersections technology has with <span className="font-semibold text-orange-400">business + art</span>.</p>
         </div>
 
         <div className="flex justify-center md:flex-1 md:justify-end md:mr-13 mb-6 md:mb-0">
@@ -51,7 +63,7 @@ export default function About() {
             src="/aboutme.png"
             alt="me"
             date="20/08/2024"
-            description="canoe trip!   🛶  ☀️"
+            description="canoe trip! 🛶 ☀️"
             rotation={2.15}
             className="w-[230px] md:w-[280px]"
           />

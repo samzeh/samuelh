@@ -22,7 +22,7 @@ export const CATEGORIES: Category[] = [
     id: "art",
     label: "art",
     items: [
-      { id: "a1", w: 102, h: 129, x: 1880, y: 1624, image: "/art/asian.png", hoverText: "painted in collab with SYU" },
+      { id: "a1", w: 102, h: 129, x: 1880, y: 1624, image: "/art/bird.png", hoverText: "watercolor" },
       { id: "a2", w: 120, h: 83, x: 2099, y: 1620, image: "/art/dishes.png", hoverText: "featured in toronto youth voices" },
       { id: "a3", w: 133, h: 104, x: 2160, y: 1906, image: "/art/oil.png", hoverText: "oil painting" },
       { id: "a4", w: 104, h: 149, x: 2279, y: 1673, image: "/art/phone.png", hoverText: "oil painting" },

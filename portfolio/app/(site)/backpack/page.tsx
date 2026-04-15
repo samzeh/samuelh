@@ -51,6 +51,7 @@ export default function BackpackPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProg, setScrollProg] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isNarrowDesktop, setIsNarrowDesktop] = useState(false);
   const [selectedId, setSelectedId] = useState(0); // backpack selected by default
   const [selectedScatterId, setSelectedScatterId] = useState<number | null>(null);
   const [scatterBoxes, setScatterBoxes] = useState<Record<number, ScatterBox>>({});
@@ -76,6 +77,14 @@ export default function BackpackPage() {
   useEffect(() => {
     const media = window.matchMedia("(max-width: 900px)");
     const onChange = () => setIsMobile(media.matches);
+    onChange();
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 901px) and (max-width: 1200px)");
+    const onChange = () => setIsNarrowDesktop(media.matches);
     onChange();
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
@@ -310,15 +319,15 @@ export default function BackpackPage() {
   const bpSize = lerp(200, 260, p2e);
   const shellTop = isMobile ? "7vh" : "54%";
   const shellBaseTransform = isMobile ? "translate(-50%, 0)" : "translate(-50%, -50%)";
-  const shellGap = isMobile ? 10 : 20;
-  const leftPanelWidth = isMobile ? "min(88vw, 352px)" : 449;
-  const leftPanelHeight = isMobile ? "min(62vh, 418px)" : 529;
+  const shellGap = isMobile ? 10 : (isNarrowDesktop ? 12 : 20);
+  const leftPanelWidth = isMobile ? "min(88vw, 352px)" : (isNarrowDesktop ? 360 : 449);
+  const leftPanelHeight = isMobile ? "min(62vh, 418px)" : (isNarrowDesktop ? 430 : 529);
   const leftPanelPadding = isMobile ? "14px 12px" : "16px 14px";
-  const leftImageWidth = isMobile ? "62%" : "78%";
+  const leftImageWidth = isMobile ? "62%" : (isNarrowDesktop ? "72%" : "78%");
   const gridCols = isMobile ? 3 : 4;
   const gridRows = 3;
-  const gridCellSize = 169;
-  const gridGap = isMobile ? 8 : 10;
+  const gridCellSize = isNarrowDesktop ? 136 : 169;
+  const gridGap = isMobile ? 8 : (isNarrowDesktop ? 8 : 10);
   const emptyCellCount = isMobile ? 0 : 3;
   const mobileContentHeight = "calc(7vh + min(62vh, 418px) + 10px + min(88vw, 352px) + 24px)";
 
@@ -341,6 +350,7 @@ export default function BackpackPage() {
         height: isMobile ? mobileContentHeight : "100vh",
         background: "#fff",
         overflow: isMobile ? "visible" : "auto",
+        overflowX: "hidden",
         cursor: "default",
       }}
     >

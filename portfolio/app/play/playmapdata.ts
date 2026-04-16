@@ -48,7 +48,7 @@ export const CATEGORIES: Category[] = [
       { id: "e1", w: 130, h: 81, x: 1400, y: 180, image: "/coding/nomad.png", hoverText: "click me: langchain experimentation", link: "https://github.com/samzeh/nomad" },
       { id: "e2", w: 126, h: 71, x: 1813, y: 295, image: "/coding/peedee.png", hoverText: "click me: discord bot for 1k+ server", link: "https://github.com/jonnyoo/modmail-web-hosting-test.git" },
       { id: "e3", w: 126, h: 79, x: 1736, y: 440, image: "/coding/ece.png", hoverText: "click me: frontend testing for blog website", link: "https://github.com/samzeh/ece-blog-front" },
-      { id: "e4", w: 126, h: 79, x: 1420, y: 396, image: "/coding/portfolio.png", hoverText: "click me: old portfolio", link: "https://samuelhuang.me" },
+      { id: "e4", w: 126, h: 79, x: 1420, y: 396, image: "/coding/portfolio.png", hoverText: "click me: old portfolio", link: "https://samzeh.github.io/old-portfolio/" },
     ],
   },
   {

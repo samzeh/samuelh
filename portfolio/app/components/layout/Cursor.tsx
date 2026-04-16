@@ -26,7 +26,10 @@ function getFinePointerHoverServerSnapshot() {
 export default function Cursor() {
   const { hoverText, cursorEnabled, setCursorLabel, cursorMode } = useCursorContext();
   const pathname = usePathname();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState(() => ({
+    x: 0,
+    y: typeof window !== "undefined" ? window.innerHeight : 0,
+  }));
   const finePointerHover = useSyncExternalStore(
     subscribeFinePointerHover,
     getFinePointerHoverSnapshot,

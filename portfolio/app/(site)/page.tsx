@@ -20,7 +20,7 @@ export default function Home() {
           <Hyperlink
             href="https://needlist.org"
             text="needlist.org"
-            imageSrc="/needlistorg.png"
+            imageSrc="/home/needlistorg.png"
             imageAlt="needlist"
           />, swe
         </InlineItem>
@@ -32,7 +32,7 @@ export default function Home() {
           <Hyperlink
             href="https://watai.ca"
             text="wat.ai"
-            imageSrc="/vista4ph.png"
+            imageSrc="/home/vista4ph.png"
             imageAlt="vista4ph"
           />
         </InlineItem>

@@ -291,7 +291,7 @@ export function HomeInteractive() {
               onMouseLeave={() => setImageHover(null)}
             >
               {imageHover === 'painting' && (
-                <div className="absolute -top-5.5 left-[50%] -translate-x-[65%] pointer-events-none justify-center w-full">
+                <div className="absolute -top-5.5 left-[50%] -translate-x-[80%] pointer-events-none justify-center w-full">
                   <div className="tooltip-pop">
                     <ToolTip tooltipText="my painting" />
                   </div>

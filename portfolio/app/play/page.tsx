@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useSyncExternalStore,
   type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
   type TouchEvent as ReactTouchEvent,
 } from "react";
@@ -15,7 +16,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useCursorContext } from "@/app/components/CursorContext";
+import { useCursorContext } from "@/app/components/layout/CursorContext";
 import { PlayMapPaths } from "./PlayMapPaths";
 import { CATEGORIES, type MapItem } from "./playmapdata";
 
@@ -93,6 +94,9 @@ export default function Play() {
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [minimapMounted, setMinimapMounted] = useState(false);
   const [pointerInCanvas, setPointerInCanvas] = useState(false);
+  const [isMinimapDragging, setIsMinimapDragging] = useState(false);
+  const minimapRef = useRef<HTMLDivElement | null>(null);
+  const draggingMinimapRef = useRef(false);
   const isPanning = useRef(false);
   const startPoint = useRef({ x: 0, y: 0 });
   const startTransform = useRef({ x: 0, y: 0 });
@@ -144,6 +148,7 @@ export default function Play() {
 
   const onMouseMove = useCallback(
     (e: ReactMouseEvent<HTMLDivElement>) => {
+      if (!pointerInCanvas) setPointerInCanvas(true);
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         const canvasX = e.clientX - rect.left;
@@ -174,7 +179,7 @@ export default function Play() {
         return { ...prev, ...clamped };
       });
     },
-    [clampTranslation, flushCursorUi]
+    [clampTranslation, flushCursorUi, pointerInCanvas]
   );
 
   const onMouseUp = useCallback(
@@ -220,6 +225,57 @@ export default function Play() {
       return { scale: newScale, ...clamped };
     });
   }, [clampTranslation]);
+
+  const panToMinimapPointer = useCallback(
+    (clientX: number, clientY: number) => {
+      const mm = minimapRef.current;
+      if (!mm) return;
+      const { w: vw, h: vh } = viewportSize;
+      if (vw <= 0 || vh <= 0) return;
+
+      const rect = mm.getBoundingClientRect();
+      const localX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+      const localY = Math.max(0, Math.min(rect.height, clientY - rect.top));
+      const sx = (localX / rect.width) * SVG_WIDTH;
+      const sy = (localY / rect.height) * SVG_HEIGHT;
+
+      setTransform((t) => {
+        const rawX = vw / 2 - sx * t.scale;
+        const rawY = vh / 2 - sy * t.scale;
+        const clamped = clampTranslation(rawX, rawY, t.scale);
+        if (clamped.x === t.x && clamped.y === t.y) return t;
+        return { ...t, ...clamped };
+      });
+    },
+    [clampTranslation, viewportSize]
+  );
+
+  const onMinimapPointerDown = useCallback(
+    (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      draggingMinimapRef.current = true;
+      setIsMinimapDragging(true);
+      e.currentTarget.setPointerCapture(e.pointerId);
+      panToMinimapPointer(e.clientX, e.clientY);
+    },
+    [panToMinimapPointer]
+  );
+
+  const onMinimapPointerMove = useCallback(
+    (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (!draggingMinimapRef.current) return;
+      panToMinimapPointer(e.clientX, e.clientY);
+    },
+    [panToMinimapPointer]
+  );
+
+  const onMinimapPointerEnd = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    draggingMinimapRef.current = false;
+    setIsMinimapDragging(false);
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  }, []);
 
   type TouchPoint = { clientX: number; clientY: number };
   const lastTouches = useRef<TouchPoint[] | null>(null);
@@ -400,7 +456,12 @@ export default function Play() {
 
   const minimap = (
     <div
+      ref={minimapRef}
       className="left-4 md:left-10"
+      onPointerDown={onMinimapPointerDown}
+      onPointerMove={onMinimapPointerMove}
+      onPointerUp={onMinimapPointerEnd}
+      onPointerCancel={onMinimapPointerEnd}
       style={{
         position: "fixed",
         bottom: 24,
@@ -408,6 +469,8 @@ export default function Play() {
         height: MINIMAP_H,
         zIndex: 60,
         overflow: "hidden",
+        touchAction: "none",
+        cursor: isMinimapDragging ? "grabbing" : "grab",
         border: "1px solid #ccc",
         background: RULER_BG,
         boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
@@ -558,7 +621,7 @@ export default function Play() {
         onMouseLeave={onCanvasMouseLeave}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
-        className="absolute inset-0 z-[1] cursor-crosshair overflow-hidden md:top-6 md:left-6"
+        className="absolute inset-0 z-1 cursor-crosshair overflow-hidden md:top-6 md:left-6"
       >
         {mapReady && (
           <svg

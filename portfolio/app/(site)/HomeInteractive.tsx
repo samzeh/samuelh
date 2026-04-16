@@ -1,12 +1,12 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import ImageFrame from '../ImageFrame'
-import { AnimatedName } from '../AnimatedName'
-import HighlightWrapper from '../HighlightWrapper'
-import { NameArrow, BuildArrow, DesignArrow } from '../HomeArrow'
-import ToolTip from '../ToolTip'
-import { getImageStackZ, type ImageHoverKey } from './getImageStackZ'
+import ImageFrame from '../components/home/ImageFrame'
+import { AnimatedName } from '../components/home/AnimatedName'
+import HighlightWrapper from '../components/home/HighlightWrapper'
+import { NameArrow, BuildArrow, DesignArrow } from '../components/home/HomeArrow'
+import ToolTip from '../components/ToolTip'
+import { getImageStackZ, type ImageHoverKey } from '../components/home/getImageStackZ'
 
 type HoverKey = 'name' | 'builder' | 'design' | null
 
@@ -195,10 +195,11 @@ export function HomeInteractive() {
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
                 <div className="flex flex-col items-start text-xl" style={{ fontFamily: 'var(--font-heading)' }}>
-                  <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-body)' }}>
-                    <span className="text-[#0CAEFF] text-2xl mt-17">[2] builder</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#0CAEFF] text-2xl mt-17">[2]<span className="ml-2">builder</span></span>
+                    
                   </div>
-                  <span className="text-main leading-4.5 mt-1">
+                  <span className="text-heading-color font-normal leading-4.5 mt-1">
                     i love building :) whether it be building tech or a new art piece, i'm all in.
                   </span>
                 </div>
@@ -336,12 +337,12 @@ export function HomeInteractive() {
                 >
                   <div className="flex flex-col items-start text-xl" style={{ fontFamily: 'var(--font-heading)' }}>
                     <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-body)' }}>
-                      <span className="text-[#1BAD0B] text-2xl -mt-5">[3] design + tech</span>
+                      <span className="text-[#1BAD0B] text-2xl -mt-5 font-normal">[3]<span className="ml-2 font-medium">design + tech</span></span>
                     </div>
-                    <span className="text-main leading-10">
+                    <span className="text-heading-color font-normal leading-10">
                       i hate boring tech. <br />
                     </span>
-                    <span className="text-main leading-4.5">
+                    <span className="text-heading-color font-normal leading-4.5">
                       currently exploring touch designer, media pipe, and open cv ;)
                     </span>
                   </div>
@@ -378,7 +379,7 @@ export function HomeInteractive() {
               {activeDef.label}
             </span>
             {activeDef.lines.map((line, i) => (
-              <span key={i} className="text-main leading-5 mt-1">
+              <span key={i} className="text-heading-color leading-5 mt-1">
                 {line}
               </span>
             ))}

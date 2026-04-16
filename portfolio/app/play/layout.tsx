@@ -1,5 +1,5 @@
 /**
- * Full-viewport layer above the marketing shell (no white card / footer here).
+ * Full-viewport layer above (no white card / footer here).
  * z-30: above footer (z-0); custom cursor stays at z-50.
  *
  * Inner `min-h-0 flex-1` avoids flex min-height:auto collapsing the pan/zoom viewport

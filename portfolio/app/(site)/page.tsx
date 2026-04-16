@@ -1,7 +1,5 @@
-import Image from 'next/image'
 import { FaBriefcase } from 'react-icons/fa'
-import { HomeInteractive } from "@/app/components/home/HomeInteractive";
-import React from "react";
+import { HomeInteractive } from "@/app/(site)/HomeInteractive";
 import ProjectCard from "@/app/components/home/ProjectCard";
 import { projects } from "@/app/components/home/projects";
 import Hyperlink from '../components/Hyperlink';

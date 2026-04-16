@@ -1,7 +1,7 @@
 "use client";
 
 import { IoArrowForward } from "react-icons/io5";
-import { useCursorContext } from "@/app/components/CursorContext";
+import { useCursorContext } from "@/app/components/layout/CursorContext";
 
 const CURSOR_LABEL = "view substack";
 

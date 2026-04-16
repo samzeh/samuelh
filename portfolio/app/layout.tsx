@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Aleo, Instrument_Sans } from "next/font/google";
 import "./globals.css";
-import Cursor from "./components/Cursor";
-import { CursorProvider } from "./components/CursorContext";
+import Cursor from "./components/layout/Cursor";
+import { CursorProvider } from "./components/layout/CursorContext";
 
 const aleo = Aleo({
   variable: "--font-aleo",

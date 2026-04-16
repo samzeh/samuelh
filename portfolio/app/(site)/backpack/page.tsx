@@ -14,7 +14,7 @@ const ITEMS = [
   { id: 8, label: "would sleep in these if i could",   src: "/items/airpod.png",   rotation: 6  },
 ];
 
-// Scatter positions [left%, top%] matching reference screenshot
+// Scatter positions [left%, top%]
 const SCATTER: [number, number][] = [
   [4,  4 ],
   [40, 2 ],
@@ -42,8 +42,10 @@ type ScatterInteraction =
   | null;
 
 const SCROLL_DISTANCE = 1200;
+
+// Back pack starting position/ending position
 const BP_START_X = 50;
-const BP_START_Y = 66;
+const BP_START_Y = 68;
 const BP_END_X = 16;
 const BP_END_Y = 50;
 

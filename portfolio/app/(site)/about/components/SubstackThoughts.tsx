@@ -3,7 +3,7 @@ import { fetchSubstackArchive, SUBSTACK_PUBLICATION_URL } from "@/lib/substack";
 import SubstackCircleLink from "./SubstackCircleLink";
 
 export default async function SubstackThoughts() {
-  const posts = await fetchSubstackArchive(12);
+  const posts = await fetchSubstackArchive();
 
   if (posts.length === 0) {
     return (

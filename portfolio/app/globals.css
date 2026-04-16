@@ -6,7 +6,7 @@
   --font-body: var(--font-instrument-sans);
   --background: #ffffff;
   --foreground: #000000;
-  --color-text-main: #514433;
+  --color-text-heading: #514433;
   --color-text-detail: #817B73;
 }
 
@@ -14,7 +14,7 @@ body {
   font-family: var(--font-body);
   letter-spacing: -0.08em;
   word-spacing: 0.15em;
-  color: var(--color-text-main);
+  color: var(--color-text-heading);
   cursor: none;
   overflow-x: hidden;      
 }
@@ -136,10 +136,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-  /* Utility class for main text color */
-  .text-main {
-    color: var(--color-text-main) !important;
-  }
 .name-text-fade-in {
   opacity: 0;
   animation-name: nameTextFadeIn;

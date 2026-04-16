@@ -1,6 +1,6 @@
-import FooterContent from "@/app/components/FooterContent";
-import Nav from "@/app/components/Nav";
-import Status from "@/app/components/Status";
+import FooterContent from "@/app/components/layout/FooterContent";
+import Nav from "@/app/components/layout/Nav";
+import Status from "@/app/components/layout/Status";
 
 const FOOTER_REVEAL_HEIGHT = "30rem";
 

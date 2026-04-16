@@ -1,15 +1,12 @@
 'use client';
-import React from "react";
+import Link from "next/link";
 import Image from "next/image";
-import { useCursorContext } from "../CursorContext";
+import { useCursorContext } from "../layout/CursorContext";
 import type { Project } from "./projects";
 
 interface ProjectCardProps {
   project: Project;
 }
-
-
-import Link from "next/link";
 
 // Map project IDs to slugs for case studies or external links
 const caseStudy: Record<number, string> = {
@@ -79,10 +76,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="flex justify-between box-border p-1 text-lg">
         <div>
-          <h2 className="text-main text-heading-color">{project.title}</h2>
+          <h2 className="text-heading-color text-heading-color">{project.title}</h2>
         </div>
         <span className="text-detail-color">
-          {project.description}  <span className='text-l mx-1'>·</span>  {project.year}
+          {project.description}  <span className='text-l mx-1'>·</span>{project.year}
         </span>
       </div>
     </div>

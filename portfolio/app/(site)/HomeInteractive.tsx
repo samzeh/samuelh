@@ -103,7 +103,7 @@ export function HomeInteractive() {
                   : 'scale(1) rotate(0deg)',
             }}
           >
-            <ImageFrame src="/me.png" alt="profile picture" size="70px" rotation="-7.1deg" />
+            <ImageFrame src="/home/me.png" alt="profile picture" size="70px" rotation="-7.1deg" />
           </div>
         </div>
 
@@ -119,7 +119,7 @@ export function HomeInteractive() {
           onMouseLeave={() => setHoverKey(null)}
           onClick={(e) => { e.stopPropagation(); handleMobileTap('name') }}
         >
-          <HighlightWrapper active={hoverKey === 'name'} src="/yellow-highlight.svg">
+          <HighlightWrapper active={hoverKey === 'name'} src="/home/yellow-highlight.svg">
             <div className="block md:hidden">
               <AnimatedName animated={true} size={120} />
             </div>
@@ -178,7 +178,7 @@ export function HomeInteractive() {
           onMouseLeave={() => setHoverKey(null)}
           onClick={(e) => { e.stopPropagation(); handleMobileTap('builder') }}
         >
-          <HighlightWrapper className="[&>img]:translate-y-0" active={hoverKey === 'builder'} src="/blue-highlight.svg">
+          <HighlightWrapper className="[&>img]:translate-y-0" active={hoverKey === 'builder'} src="/home/blue-highlight.svg">
             builder
           </HighlightWrapper>
 
@@ -247,7 +247,7 @@ export function HomeInteractive() {
                       : 'scale(1) rotate(0deg)',
                 }}
               >
-                <ImageFrame src="/hardhat.png" alt="hardhat" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-8.54deg" delay="0.08s" />
+                <ImageFrame src="/home/hardhat.png" alt="hardhat" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-8.54deg" delay="0.08s" />
               </div>
             </div>
 
@@ -274,7 +274,7 @@ export function HomeInteractive() {
                 }}
               >
                 <ImageFrame
-                  src="/socratica.png"
+                  src="/home/socratica.png"
                   alt="socratica"
                   size="40px"
                   className="md:!w-[45px] md:!h-[45px]"
@@ -306,7 +306,7 @@ export function HomeInteractive() {
                       : 'scale(1) rotate(0deg)',
                 }}
               >
-                <ImageFrame src="/painting.png" alt="painting" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-1.39deg" delay="0.24s" />
+                <ImageFrame src="/home/painting.png" alt="painting" size="40px" className="md:!w-[45px] md:!h-[45px]" rotation="-1.39deg" delay="0.24s" />
               </div>
             </div>
           </div>
@@ -319,7 +319,7 @@ export function HomeInteractive() {
             onMouseLeave={() => setHoverKey(null)}
             onClick={(e) => { e.stopPropagation(); handleMobileTap('design') }}
           >
-            <HighlightWrapper className="text-xl md:text-3xl relative [&>img]:translate-y-0" active={hoverKey === 'design'} src="/green-highlight.svg">
+            <HighlightWrapper className="text-xl md:text-3xl relative [&>img]:translate-y-0" active={hoverKey === 'design'} src="/home/green-highlight.svg">
               design + tech
             </HighlightWrapper>
 

@@ -60,7 +60,7 @@ export default function About() {
 
         <div className="flex justify-center md:flex-1 md:justify-end md:mr-13 mb-6 md:mb-0">
           <Polaroid
-            src="/aboutme.png"
+            src="/about/aboutme.png"
             alt="me"
             date="20/08/2024"
             description="canoe trip! 🛶 ☀️"

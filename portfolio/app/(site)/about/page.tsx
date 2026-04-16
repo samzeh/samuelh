@@ -50,10 +50,10 @@ export default function About() {
             </span>
             {/* Add a space after InlineItem */}
             {" "}
-            studying <Hyperlink href="https://uwaterloo.ca/future-students/programs/systems-design-engineering" text="Systems Design Engineering" imageSrc="/sydeweb.png" imageAlt="syde"/>.
+            studying <Hyperlink href="https://uwaterloo.ca/future-students/programs/systems-design-engineering" text="Systems Design Engineering" imageSrc="/about/sydeweb.png" imageAlt="syde"/>.
           </span>
           <br />
-          <span className="text-base md:text-[19px] block">I love to <span className="font-semibold text-green-600">create</span>. Whether it be experimenting to perfect the perfect <Hyperlink href="https://stirringtheglobe.wordpress.com/" text="chocolate chip recipe" imageSrc="/foodblog.png" imageAlt="food blog"/>, or jumping on project ideas, trying new things is a big part of who I am.</span>
+          <span className="text-base md:text-[19px] block">I love to <span className="font-semibold text-green-600">create</span>. Whether it be experimenting to perfect the perfect <Hyperlink href="https://stirringtheglobe.wordpress.com/" text="chocolate chip recipe" imageSrc="/about/foodblog.png" imageAlt="food blog"/>, or jumping on project ideas, trying new things is a big part of who I am.</span>
           <br />
           <p className="text-base md:text-[19px]">As of right now, however, I'm exploring the intersections technology has with <span className="font-semibold text-orange-400">business + art</span>.</p>
         </div>

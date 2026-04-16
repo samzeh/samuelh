@@ -1,6 +1,4 @@
-import React from "react";
 import TitleImage from "../components/TitleImage";
-import Quotation from "../components/Quotation";
 import ImageContainer from "../components/ImageContainer";
 import ImageTextSideBySide from "../components/ImageTextSideBySide";
 
@@ -50,7 +48,7 @@ export default function RippleCaseStudy() {
         </p>
         <ImageContainer
           images={[
-            { src: "/ferret/article.png", alt: "article" },
+            { src: "/projects/ferret/article.png", alt: "article" },
           ]}
         />
         <p className="text-detail-color">
@@ -65,7 +63,7 @@ export default function RippleCaseStudy() {
 
       <section className="space-y-3">
         <ImageTextSideBySide
-        images={[{ src: "/ferret/e1.png", alt: "e1" },
+        images={[{ src: "/projects/ferret/e1.png", alt: "e1" },
           ]}
           aspectRatio="1/1"
           imageLeft={false}
@@ -89,8 +87,8 @@ export default function RippleCaseStudy() {
           providing a platform for small businesses to market themselves to a wider audience.
         </p>
           <ImageTextSideBySide
-            images={[{ src: "/ferret/home2.png", alt: "home" },
-              { src: "/ferret/review2.png", alt: "review" },
+            images={[{ src: "/projects/ferret/home2.png", alt: "home" },
+              { src: "/projects/ferret/review2.png", alt: "review" },
             ]}
             aspectRatio="1/2"
             imageLeft={true}
@@ -107,8 +105,8 @@ export default function RippleCaseStudy() {
           </ImageTextSideBySide>
 
           <ImageTextSideBySide
-          images={[{ src: "/ferret/plan.png", alt: "home" },
-              { src: "/ferret/ai.png", alt: "review" },
+          images={[{ src: "/projects/ferret/plan.png", alt: "home" },
+              { src: "/projects/ferret/ai.png", alt: "review" },
             ]}
             aspectRatio="1/2"
             imageLeft={false}
@@ -140,7 +138,7 @@ export default function RippleCaseStudy() {
         </p>
         <ImageContainer
           images={[
-            { src: "/ferret/comp.png", alt: "competitor analysis" },
+            { src: "/projects/ferret/comp.png", alt: "competitor analysis" },
           ]}
         />
       </section>
@@ -157,7 +155,7 @@ export default function RippleCaseStudy() {
         <h2 className="text-3xl">promo mockups</h2>
         <ImageContainer
           images={[
-            { src: "/ferret/promo.png", alt: "promo" },
+            { src: "/projects/ferret/promo.png", alt: "promo" },
           ]}
         />
       </section>

@@ -47,8 +47,8 @@ export default function MapCaseStudy() {
         </p>
         <ImageContainer
           images={[
-            { src: "/map/glass1.png", alt: "glass1" },
-            { src: "/map/glass2.png", alt: "glass2" },
+            { src: "/projects/map/glass1.png", alt: "glass1" },
+            { src: "/projects/map/glass2.png", alt: "glass2" },
           ]}
         />
         <p className="text-detail-color">
@@ -64,8 +64,8 @@ export default function MapCaseStudy() {
         <h3 className="text-2xl">home/search</h3>
         <ImageContainer
           images={[
-            { src: "/map/desktophome.png", alt: "home" },
-            { src: "/map/desktopsearch.png", alt: "search" },
+            { src: "/projects/map/desktophome.png", alt: "home" },
+            { src: "/projects/map/desktopsearch.png", alt: "search" },
           ]}
         />
         <p className="text-detail-color">
@@ -75,9 +75,9 @@ export default function MapCaseStudy() {
         <h3 className="text-2xl">view/save/add outlets</h3>
         <ImageContainer
           images={[
-            { src: "/map/desktopaddress.png", alt: "address" },
-            { src: "/map/desktopsave.png", alt: "saved" },
-            { src: "/map/desktopadd.png", alt: "add" },
+            { src: "/projects/map/desktopaddress.png", alt: "address" },
+            { src: "/projects/map/desktopsave.png", alt: "saved" },
+            { src: "/projects/map/desktopadd.png", alt: "add" },
           ]}
         />
         <p className="text-detail-color">
@@ -87,7 +87,7 @@ export default function MapCaseStudy() {
         <h3 className="text-2xl">profile</h3>
         <ImageContainer
           images={[
-            { src: "/map/desktopprofile.png", alt: "profile" },
+            { src: "/projects/map/desktopprofile.png", alt: "profile" },
           ]}
         />
         <p className="text-detail-color">
@@ -100,8 +100,8 @@ export default function MapCaseStudy() {
           The following images showcase my work in translating the desktop designs to mobile.
         </p>
         <ImageTextSideBySide
-          images={[{ src: "/map/home.png", alt: "home" },
-            { src: "/map/search.png", alt: "search" },
+          images={[{ src: "/projects/map/home.png", alt: "home" },
+            { src: "/projects/map/search.png", alt: "search" },
           ]}
           aspectRatio="1/2"
           imageLeft={false}
@@ -120,8 +120,8 @@ export default function MapCaseStudy() {
         </ImageTextSideBySide>
 
         <ImageTextSideBySide
-          images={[{ src: "/map/address.png", alt: "address" },
-            { src: "/map/saved.png", alt: "saved" },
+          images={[{ src: "/projects/map/address.png", alt: "address" },
+            { src: "/projects/map/saved.png", alt: "saved" },
           ]}
           aspectRatio="1/2"
           imageLeft={true}
@@ -141,10 +141,10 @@ export default function MapCaseStudy() {
         <h3 className="text-2xl">add outlets</h3>
         <ImageContainer
           images={[
-            { src: "/map/step1.png", alt: "step 1" },
-            { src: "/map/step2.png", alt: "step 2" },
-            { src: "/map/step3.png", alt: "step 3" },
-            { src: "/map/step4.png", alt: "step 4" },
+            { src: "/projects/map/step1.png", alt: "step 1" },
+            { src: "/projects/map/step2.png", alt: "step 2" },
+            { src: "/projects/map/step3.png", alt: "step 3" },
+            { src: "/projects/map/step4.png", alt: "step 4" },
           ]}
         />
         <p className="text-detail-color">
@@ -160,7 +160,7 @@ export default function MapCaseStudy() {
         </p>
 
         <ImageTextSideBySide
-          images={[{ src: "/map/profile.png", alt: "profile" }
+          images={[{ src: "/projects/map/profile.png", alt: "profile" }
           ]}
           aspectRatio="1/2"
           imageLeft={true}

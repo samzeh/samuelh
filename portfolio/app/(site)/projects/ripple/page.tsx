@@ -44,7 +44,7 @@ export default function RippleCaseStudy() {
         </p>
         <ImageContainer
           images={[
-            { src: "/ripple/ideation.jpg", alt: "ideation" },
+            { src: "/projects/ripple/ideation.jpg", alt: "ideation" },
           ]}
         />
         <p className="text-detail-color">
@@ -69,9 +69,9 @@ export default function RippleCaseStudy() {
         </p>
         <ImageContainer
           images={[
-            { src: "/ripple/e2.png", alt: "e2" },
-            { src: "/ripple/e1.png", alt: "e1" },
-            { src: "/ripple/e3.png", alt: "e3" },
+            { src: "/projects/ripple/e2.png", alt: "e2" },
+            { src: "/projects/ripple/e1.png", alt: "e1" },
+            { src: "/projects/ripple/e3.png", alt: "e3" },
           ]}
         />
 
@@ -112,7 +112,7 @@ export default function RippleCaseStudy() {
 
         <ImageContainer
           images={[
-            { src: "/ripple/system.jpg", alt: "system" },
+            { src: "/projects/ripple/system.jpg", alt: "system" },
           ]}
         />
         <p className="text-detail-color">
@@ -129,8 +129,8 @@ export default function RippleCaseStudy() {
         </p>
 
         <ImageTextSideBySide
-          images={[{ src: "/ripple/home.png", alt: "home" }, 
-            { src: "/ripple/home2.png", alt: "home2" }]}
+          images={[{ src: "/projects/ripple/home.png", alt: "home" }, 
+            { src: "/projects/ripple/home2.png", alt: "home2" }]}
           imageLeft={true}
           aspectRatio="1/2"
           imageWidth={240}
@@ -150,7 +150,7 @@ export default function RippleCaseStudy() {
         </ImageTextSideBySide>
 
         <ImageTextSideBySide
-          images={[{ src: "/ripple/result.png", alt: "answer" }]}
+          images={[{ src: "/projects/ripple/result.png", alt: "answer" }]}
           imageLeft={false}
           aspectRatio="1/2"
           imageWidth={240}
@@ -170,7 +170,7 @@ export default function RippleCaseStudy() {
 
 
         <ImageTextSideBySide
-          images={[{ src: "/ripple/discover.png", alt: "discover" }]}
+          images={[{ src: "/projects/ripple/discover.png", alt: "discover" }]}
           aspectRatio="1/2"
           imageLeft={true}
           imageWidth={240}
@@ -190,8 +190,8 @@ export default function RippleCaseStudy() {
         </ImageTextSideBySide>
 
         <ImageTextSideBySide
-          images={[{ src: "/ripple/profile.png", alt: "profile" },
-            { src: "/ripple/history.png", alt: "history" },
+          images={[{ src: "/projects/ripple/profile.png", alt: "profile" },
+            { src: "/projects/ripple/history.png", alt: "history" },
           ]}
           aspectRatio="1/2"
           imageLeft={false}

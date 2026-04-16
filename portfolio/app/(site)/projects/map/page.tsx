@@ -9,7 +9,9 @@ export default function MapCaseStudy() {
       <h1 className="text-4xl mb-3">Be a tourist in your own city</h1>
 
       <TitleImage
-        vimeoId="1182442714"
+        videoSrc="/projects/map/electrium.mp4"
+        videoPoster="/projects/map/electrium.png"
+        alt="map case study video"
         zoom={1.2}
         stats={[
           { label: "my role", values: ["designer"] },

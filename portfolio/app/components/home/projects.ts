@@ -4,7 +4,8 @@ export type Project = {
   description: string;
   year: number;
   image?: string;
-  vimeoId?: string;
+  videoSrc?: string;
+  videoPoster?: string;
   aspectRatio?: string;
   zoom?: number;
   cursorText: string;
@@ -16,7 +17,7 @@ export const projects: Project[] = [
     title: "Reimagining the future of LLMs",
     description: "des",
     year: 2026,
-    image: "/home/projects/ripple.png",
+    image: "/projects/ripple/ripple.png",
     aspectRatio: "3/1.7",
     cursorText: "view case study",
   },
@@ -25,7 +26,8 @@ export const projects: Project[] = [
     title: "Your next recipe, one scroll away",
     description: "dev",
     year: 2026,
-    vimeoId: "1181428713",
+    videoSrc: "/projects/munch/munch.mp4",
+    videoPoster: "/projects/munch/munch.png",
     aspectRatio: "3/1.9",
     cursorText: "join the munch",
   },
@@ -34,7 +36,8 @@ export const projects: Project[] = [
     title: "Designing the map of the future",
     description: "des",
     year: 2025,
-    vimeoId: "1182442714",
+    videoSrc: "/projects/map/electrium.mp4",
+    videoPoster: "/projects/map/electrium.png",
     aspectRatio: "3/1.5",
     cursorText: "view case study",
   },
@@ -43,7 +46,8 @@ export const projects: Project[] = [
     title: "Making emergency rooms SwiftER",
     description: "dev",
     year: 2025,
-    vimeoId: "1182442931",
+    videoSrc: "/projects/swifter/swifter.mp4",
+    videoPoster: "/projects/swifter/swifter.png",
     aspectRatio: "3/1.5",
     zoom: 1.3,
     cursorText: "view github",
@@ -54,7 +58,8 @@ export const projects: Project[] = [
     title: "Visualizing book recommendations",
     description: "dev",
     year: 2026,
-    vimeoId: "1182781802",
+    videoSrc: "/projects/archives/archives.mp4",
+    videoPoster: "/projects/archives/archives.png",
     aspectRatio: "3/1.5",
     zoom: 1.3,
     cursorText: "try it out",
@@ -64,7 +69,7 @@ export const projects: Project[] = [
     title: "Be a tourist in your own city",
     description: "des",
     year: 2023,
-    image: "/home/projects/ferret.png",
+    image: "/projects/ferret/ferret.png",
     aspectRatio: "3/1.5",
     cursorText: "view case study",
   },

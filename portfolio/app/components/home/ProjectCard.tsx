@@ -37,26 +37,30 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   // Card content
   const cardContent = (
     <div className="overflow-hidden flex flex-col">
-      {project.vimeoId ? (
+      {project.videoSrc ? (
         <div
           className="w-full relative overflow-hidden rounded-md border border-[#E7EEF3]"
           style={{ aspectRatio: project.aspectRatio || "16/9" }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <iframe
-            src={`https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&muted=1&loop=1&background=1`}
-            title={project.title}
+          <video
+            src={project.videoSrc}
+            poster={project.videoPoster}
+            aria-label={project.title}
             className="absolute top-1/2 left-1/2 pointer-events-none"
             style={{
               width: `${zoom * 100}%`,
               height: `${zoom * 100}%`,
               transform: 'translate(-50%, -50%)',
+              objectFit: 'cover',
             }}
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
         </div>
       ) : (
         <div

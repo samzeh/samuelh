@@ -15,8 +15,20 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://samuelh.vercel.app/"),
   title: "Samuel Huang",
-  description: "my portfolio",
+  description: "a systems design engineering student @ uwaterloo who loves to create at the intersection of design + tech",
+  openGraph: {
+    title: "Samuel Huang",
+    description: "a systems design engineering student @ uwaterloo who loves to create at the intersection of design + tech",
+    images: ["/embed.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Samuel Huang",
+    description: "a systems design engineering student @ uwaterloo who loves to create at the intersection of design + tech",
+    images: ["/embed.png"],
+  },
 };
 
 export default function RootLayout({

@@ -10,7 +10,7 @@ export default function RippleCaseStudy() {
       <h1 className="text-4xl mb-3">Be a tourist in your own city</h1>
 
       <TitleImage
-        src="/ferret.png"
+        src="/home/projects/ferret.png"
         alt="ferret"
         stats={[
           { label: "my role", values: ["designer + pitcher"] },

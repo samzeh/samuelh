@@ -3,6 +3,7 @@ import { Aleo, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import Cursor from "./components/layout/Cursor";
 import { CursorProvider } from "./components/layout/CursorContext";
+import { Analytics } from '@vercel/analytics/react';
 
 const aleo = Aleo({
   variable: "--font-aleo",
@@ -45,6 +46,7 @@ export default function RootLayout({
         <CursorProvider>
           <Cursor />
           {children}
+          <Analytics />
         </CursorProvider>
       </body>
     </html>

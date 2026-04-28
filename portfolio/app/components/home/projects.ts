@@ -17,9 +17,11 @@ export const projects: Project[] = [
     title: "Reimagining the future of LLMs",
     description: "des",
     year: 2026,
-    image: "/projects/ripple/ripple.png",
+    videoSrc: "/projects/ripple/ripple.mov",
+    videoPoster: "/projects/ripple/ripple.png",
     aspectRatio: "3/1.7",
     cursorText: "view case study",
+    zoom: 1
   },
   {
     id: 2,

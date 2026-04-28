@@ -10,8 +10,10 @@ export default function RippleCaseStudy() {
       <h1 className="text-4xl mb-3">Reimagining the Future of LLMs</h1>
 
       <TitleImage
-        src="/projects/ripple/ripple.png"
+        videoSrc="/projects/ripple/ripple.mov"
+        videoPoster="/projects/ripple/ripple.png"
         alt="ripple"
+        zoom={1}
         stats={[
           { label: "my role", values: ["designer"] },
           { label: "team", values: ["4 designers"] },

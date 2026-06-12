@@ -13,7 +13,7 @@ const Status = () => {
 
         {/* text */}
         <div className="text-base font-sans text-[#71624D] font-normal leading-none whitespace-nowrap">
-          seeking fall 2026 internships
+          seeking summer 2027 internships
         </div>
 
       </div>

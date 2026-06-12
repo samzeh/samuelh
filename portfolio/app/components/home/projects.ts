@@ -75,4 +75,14 @@ export const projects: Project[] = [
     aspectRatio: "3/1.5",
     cursorText: "view case study",
   },
+  // {
+  //   id: 7,
+  //   title: "Learn the markets with zero financial risk",
+  //   description: "des",
+  //   year: 2023,
+  //   videoSrc: "/projects/scotia/scotia.mp4",
+  //   videoPoster: "/projects/scotia/scotia.png",
+  //   aspectRatio: "3/1.5",
+  //   cursorText: "coming soon",
+  // },
 ];

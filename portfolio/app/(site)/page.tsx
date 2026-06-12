@@ -13,16 +13,16 @@ export default function Home() {
       <div className="flex items-center gap-x-1 text-[15px] md:text-[18px] text-detail-color mt-1.5">
         <FaBriefcase />
         <InlineItem
-          label="curr. tpm"
-          icon="/needlist.png"
-          iconAlt="needlist logo"
+          label="inc. swe"
+          icon="/readwise.png"
+          iconAlt="readwise logo"
         >
           <Hyperlink
-            href="https://needlist.org"
-            text="needlist.org"
-            imageSrc="/home/needlistorg.png"
-            imageAlt="needlist"
-          />, swe
+            href="https://readwise.io/"
+            text="readwise"
+            imageSrc="/home/readwise.png"
+            imageAlt="readwise"
+          />, curr. swe
         </InlineItem>
         
         <InlineItem

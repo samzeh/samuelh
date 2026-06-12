@@ -9,27 +9,44 @@ interface ExperienceObject {
   alt: string;
   position: string;
   date: string;
+  previewSrc: string;
+  previewType: "image" | "video";
 }
 
 // Fix: proper typing
 const experience: ExperienceObject[] = [
   {
+    image: "/readwise.png",
+    alt: "readwise",
+    position: "software engineer",
+    date: "inc. fall '26",
+    previewSrc: "/home/readwise.png",
+    previewType: "image",
+
+  },
+  {
     image: "/needlist.png",
     alt: "needlist.org",
     position: "technical project manager",
     date: "2026",
+    previewSrc: "/home/needlistorg.png",
+    previewType: "image",
   },
   {
     image: "/watai.png",
     alt: "wat.ai",
     position: "software engineer",
     date: "2026",
+    previewSrc: "/home/vista4ph.png",
+    previewType: "image",
   },
   {
     image: "/electrium.png",
     alt: "electrium mobility",
     position: "product designer",
     date: "2026",
+    previewSrc: "/projects/map/electrium.mp4",
+    previewType: "video",
   },
 ];
 
@@ -76,7 +93,33 @@ export default function About() {
 
         <div className="flex flex-col gap-4 w-full">
           {experience.map((exp, index) => (
-            <div key={index} className="flex items-center w-full">
+            <div
+              key={index}
+              className="group relative rounded-md flex items-center w-full px-3 py-3 transition-colors duration-200 hover:bg-[#61462f]/10"
+            >
+              <div className="pointer-events-none absolute -top-2 right-2 z-20 h-32 w-48 md:h-44 md:w-72 overflow-hidden border-black/10 bg-white opacity-0 shadow-xl transition-all duration-200 group-hover:opacity-100">
+                <div className="relative h-full w-full">
+                  {exp.previewType === "video" ? (
+                    <video
+                      src={exp.previewSrc}
+                      className="h-full w-full object-cover"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    />
+                  ) : (
+                    <Image
+                      src={exp.previewSrc}
+                      alt={`${exp.alt} preview`}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 288px, 192px"
+                    />
+                  )}
+                </div>
+              </div>
+
               <div className="flex items-center gap-2 md:w-2/5 min-w-0">
                 <Image
                   src={exp.image}

@@ -13,7 +13,7 @@ export default function Home() {
       <div className="flex items-center gap-x-1 text-[15px] md:text-[18px] text-detail-color mt-1.5">
         <FaBriefcase />
         <InlineItem
-          label="inc. swe"
+          label="swe"
           icon="/readwise.png"
           iconAlt="readwise logo"
         >

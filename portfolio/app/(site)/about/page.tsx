@@ -19,7 +19,7 @@ const experience: ExperienceObject[] = [
     image: "/readwise.png",
     alt: "readwise",
     position: "software engineer",
-    date: "inc. fall '26",
+    date: "fall '26",
     previewSrc: "/home/readwise.png",
     previewType: "image",
 
